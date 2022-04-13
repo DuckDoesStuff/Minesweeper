@@ -1,8 +1,13 @@
 #include <iostream>
+#include "Common.h"
+#include "Menu.h"
+
 
 int main()
 {
-	std::cout << "hi";
+	Menu test;
+	test.renderMainScreen();
 
-	return 0;
+	Sleep(5000);
+	Common::clearConsole();
 }
