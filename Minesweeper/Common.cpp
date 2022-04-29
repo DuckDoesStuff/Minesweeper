@@ -1,4 +1,4 @@
-#include "Common.h"
+﻿#include "Common.h"
 
 HWND Common::consoleWindow = GetConsoleWindow();
 HANDLE Common::consoleOutput = GetStdHandle(STD_OUTPUT_HANDLE);
@@ -79,5 +79,41 @@ void Common::clearConsole()
 int Common::getConsoleInput()
 {
 	int c = _getch();
-	return 0;
+	if (c == 0 || c == 224)
+	{
+		switch (_getch())
+		{
+		case 72:				//lên
+			return 2;
+		case 75:				//trái
+			return 3;
+		case 77:				//phải
+			return 4;
+		case 80:				//xuống
+			return 5;
+		default:				//nút khác
+			return 0;
+		}
+	}
+	else
+	{
+		if (c == 27)                  //esc
+			return 1;
+		else if (c == 87 || c == 119) //W, w
+			return 2;
+		else if (c == 65 || c == 97)  //A, a
+			return 3;
+		else if (c == 68 || c == 100) //D, d
+			return 4;
+		else if (c == 83 || c == 115) //S, s
+			return 5;
+		else if (c == 13)             //Enter
+			return 6;
+		else if (c == 72 || c == 104) //H, h
+			return 7;
+		else if (c == 77 || c == 109) //M, m
+			return 8;
+		else
+			return 0;                 //nút khác
+	}
 }
