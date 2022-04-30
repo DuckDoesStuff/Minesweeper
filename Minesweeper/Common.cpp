@@ -51,7 +51,7 @@ void Common::hideCursor()
 
 void Common::setConsoleTitle()
 {
-	SetConsoleTitle(L"HI");
+	SetConsoleTitle(L"Minesweeper");
 }
 
 void Common::disableMaximize()

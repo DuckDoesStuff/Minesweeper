@@ -34,7 +34,6 @@ void Menu::printTitle()
 		Common::gotoXY(left, top + i);
 		std::cout << s;
 		i++;
-		Sleep(20);
 	}
 	in.close();
 }
@@ -99,48 +98,66 @@ void Menu::renderCurOpt()
 	putchar(62);				//left arrows
 	putchar(62);
 	int left2 = 80;
-	Common::gotoXY(left2, top); 
+	Common::gotoXY(left2, top);
 	putchar(60);				//right arrows
 	putchar(60);
-	int c;
-	while (true) {
+	int c, slt = 0;
+	bool loadMenu = true;
+	while (loadMenu) {
 		c = Common::getConsoleInput();
 		switch (c) {
-			case 2: {			//move up
-				Common::gotoXY(left1, top);
-				putchar(' ');
-				putchar(' ');
-				Common::gotoXY(left2, top);
-				putchar(' ');
-				putchar(' ');
-				top -= 2;
-				Common::gotoXY(left1, top);
-				putchar(62);
-				putchar(62);
-				Common::gotoXY(left2, top);
-				putchar(60);
-				putchar(60);
-				break;
-			}
-			case 5: {			//move down
-				Common::gotoXY(left1, top);
-				putchar(' ');
-				putchar(' ');
-				Common::gotoXY(left2, top);
-				putchar(' ');
-				putchar(' ');
-				top += 2;
-				Common::gotoXY(left1, top);
-				putchar(62);
-				putchar(62);
-				Common::gotoXY(left2, top);
-				putchar(60);
-				putchar(60);
-			}
-			case 6: {			//enter
-
-			}
-		
+		case 2:			//move up
+			if (slt == 0) break;
+			Common::gotoXY(left1, top);
+			putchar(' ');
+			putchar(' ');
+			Common::gotoXY(left2, top);
+			putchar(' ');
+			putchar(' ');
+			top -= 2;
+			Common::gotoXY(left1, top);
+			putchar(62);
+			putchar(62);
+			Common::gotoXY(left2, top);
+			putchar(60);
+			putchar(60);
+			slt--;
+			break;
+		case 5:			//move down
+			if (slt == 4) break;
+			Common::gotoXY(left1, top);
+			putchar(' ');
+			putchar(' ');
+			Common::gotoXY(left2, top);
+			putchar(' ');
+			putchar(' ');
+			top += 2;
+			Common::gotoXY(left1, top);
+			putchar(62);
+			putchar(62);
+			Common::gotoXY(left2, top);
+			putchar(60);
+			putchar(60);
+			slt++;
+			break;
+		case 6:			//enter
+			loadMenu = false;
+			break;
 		}
+	}
+
+	switch (slt) {
+	case 0://Play easy
+		Game().setUpGame(10);
+		break;
+	case 1://Play medium
+		Game().setUpGame(15);
+		break;
+	case 2://Play difficult
+		Game().setUpGame(25);
+		break;
+	case 3://Leaderboard
+		break;
+	case 4:exit(0);
 	}
 }
