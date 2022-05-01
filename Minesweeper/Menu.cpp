@@ -40,11 +40,11 @@ void Menu::printTitle()
 
 void Menu::renderOptionsBox()
 {
-	int left = 57, top = 17;
+	int left = 55, top = 17;
 	int boxW = 21, boxH = 2;
 
 	Common::setConsoleColor(BLACK, BRIGHT_WHITE);
-
+		
 	int box;
 	for (int i = 0; i < Menu()._opt; i++) {
 		box = i * boxH;
@@ -83,7 +83,7 @@ void Menu::renderOptionsBox()
 
 void Menu::renderOptionsText()
 {
-	int left = 48, top = 18;
+	int left = 46, top = 18;
 	int width = 41;
 	for (int i = 0; i < Menu()._opt; i++) {
 		Common::gotoXY((width - Menu()._selections[i].length())/2 + left, top + i*2);
@@ -93,11 +93,11 @@ void Menu::renderOptionsText()
 
 void Menu::renderCurOpt()
 {
-	int left1 = 54, top = 18;
+	int left1 = 52, top = 18;
 	Common::gotoXY(left1, top);
 	putchar(62);				//left arrows
 	putchar(62);
-	int left2 = 80;
+	int left2 = 78;
 	Common::gotoXY(left2, top);
 	putchar(60);				//right arrows
 	putchar(60);
@@ -107,7 +107,7 @@ void Menu::renderCurOpt()
 		c = Common::getConsoleInput();
 		switch (c) {
 		case 2:			//move up
-			if (slt == 0) break;
+			if (slt == 0) break; // limit up
 			Common::gotoXY(left1, top);
 			putchar(' ');
 			putchar(' ');
@@ -124,7 +124,7 @@ void Menu::renderCurOpt()
 			slt--;
 			break;
 		case 5:			//move down
-			if (slt == 4) break;
+			if (slt == 4) break; // limit down
 			Common::gotoXY(left1, top);
 			putchar(' ');
 			putchar(' ');

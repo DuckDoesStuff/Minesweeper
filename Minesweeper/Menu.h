@@ -16,6 +16,6 @@ public:
 	static void renderMainScreen();//Render the title and menu options also setup console attributes
 	static void printTitle();
 	static void renderOptionsBox();
-	static void renderOptionsText();
+	static void renderOptionsText();	
 	static void renderCurOpt();	//hien thi lua chon hien tai
 };
