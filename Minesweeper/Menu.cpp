@@ -150,11 +150,8 @@ void Menu::renderCurOpt()
 	case 0://Play easy
 		Game().setUpGame(10);
 		break;
-	case 1://Play medium
+	case 1://Play hard
 		Game().setUpGame(15);
-		break;
-	case 2://Play difficult
-		Game().setUpGame(25);
 		break;
 	case 3://Leaderboard
 		break;
