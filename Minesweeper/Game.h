@@ -3,7 +3,7 @@
 #include "Common.h"
 
 const int CELL_HEIGHT = 3;
-const int CELL_LENGTH = 3;
+const int CELL_LENGTH = 5;
 
 class Game {
 private:

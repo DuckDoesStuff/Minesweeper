@@ -10,6 +10,7 @@ Game::~Game() {
 }
 
 void Game::setUpGame(int size) {
+	Common().setFontInfo(13,13);
 	Common::clearConsole();
 	drawGame(size);
 }
@@ -18,34 +19,33 @@ void Game::drawGame(int size) {//vẽ ra bảng game
 	int left = 0, top = 0;
 
 	Common::gotoXY(left, top);
-	for (int i = 0; i < CELL_LENGTH * size; i++) {
-		std::cout << "\n";
-		for (int j = 0; j < CELL_HEIGHT * size; j++) {
+	for (int i = 0; i <= CELL_HEIGHT * size; i+= CELL_HEIGHT) {
+		Common().gotoXY(left, top + i);
+		for (int j = 0; j <= CELL_LENGTH * size; j++) {
 			putchar(205);
 		}
 	}
 	
-	Common().gotoXY(left, top + 1); //  tren ben trai
+	Common().gotoXY(left, top); //  tren ben trai
 	putchar(201);
-	top+=2;
-	for (top; top < CELL_HEIGHT * size; top++) {
-		Common().gotoXY(left, top);
+
+	for (int i = 1; i < CELL_HEIGHT * size; i++) {
+		Common().gotoXY(left, top+i);
 		putchar(186);
 	}
-	Common().gotoXY(left , top); // duoi ben trai
+	Common().gotoXY(left,top + CELL_HEIGHT * size); // duoi ben trai
 	putchar(200);
 	
-
-	left = CELL_LENGTH * size;
-	Common().gotoXY(top,left); // duoi ben phai
+	Common().gotoXY(left + CELL_LENGTH * size ,top + CELL_HEIGHT * size); // duoi ben phai
 	putchar(188);
-	top--;
-	for (top; top > 0; top--) {
-		Common().gotoXY(left, top);
+
+	for (int i = 1; i < CELL_HEIGHT * size; i++) {
+		Common().gotoXY(left + CELL_LENGTH * size, top+i);
 		putchar(186);
 	}
-	Common().gotoXY(left, top+1); // tren ben phai
+
+	Common().gotoXY(left + CELL_LENGTH * size, top); // tren ben phai
 	putchar(187);
-	Sleep(5000);
+	Sleep(50000);
 	
 }
