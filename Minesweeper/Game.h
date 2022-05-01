@@ -2,8 +2,8 @@
 
 #include "Common.h"
 
-const int CELL_HEIGHT = 3;
-const int CELL_LENGTH = 5;
+const int CELL_HEIGHT = 2;
+const int CELL_LENGTH = 4;
 
 class Game {
 private:
@@ -21,5 +21,5 @@ public:
 	void drawGame(int);
 	void drawHorizontalLine(int, int, int);
 	void drawVerticalLine(int, int, int);
-	void drawCorner(int, int, int);
+	void drawCorner(int size, int left, int top);
 };

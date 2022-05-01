@@ -1,5 +1,6 @@
 ﻿#include "Game.h"
 #include <iostream>
+
 Game::Game() {
 
 }
@@ -9,7 +10,7 @@ Game::~Game() {
 }
 
 void Game::setUpGame(int size) {
-	Common().setFontInfo(13,13);
+	Common().setFontInfo(18, 18);
 	Common::clearConsole();
 	drawGame(size);
 }
@@ -20,12 +21,9 @@ void Game::drawGame(int size) {//vẽ ra bảng game
 	drawVerticalLine(size, left, top);
 	drawCorner(size, left, top);
 	Sleep(50000);
-	
 }
 
-
 void Game::drawHorizontalLine(int size, int left, int top) {
-	Common::gotoXY(left, top);
 	for (int i = 0; i <= CELL_HEIGHT * size; i += CELL_HEIGHT) {
 		Common().gotoXY(left, top + i);
 		for (int j = 0; j <= CELL_LENGTH * size; j++) {
@@ -35,15 +33,11 @@ void Game::drawHorizontalLine(int size, int left, int top) {
 }
 
 void Game::drawVerticalLine(int size, int left, int top) {
-	// left
-	for (int i = 1; i < CELL_HEIGHT * size; i++) {
-		Common().gotoXY(left, top + i);
-		putchar(186);
-	}
-	// right
-	for (int i = 1; i < CELL_HEIGHT * size; i++) {
-		Common().gotoXY(left + CELL_LENGTH * size, top + i);
-		putchar(186);
+	for (int i = 0; i <= CELL_LENGTH * size; i+=CELL_LENGTH) {
+		for (int j = 0; j <= CELL_HEIGHT * size; j++) {
+			Common::gotoXY(left + i, top + j);
+			putchar(186);
+		}
 	}
 }
 
