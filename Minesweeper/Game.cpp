@@ -31,23 +31,16 @@ void Game::generateGameData(int size)
 		break;
 	}
 
-	//Initializing _minesMap
-	_minesMap = new bool*[size];
-	for (int i = 0; i < size; i++) _minesMap[i] = new bool[size];
+	_cellsMap = new Cells * [size];
 	for (int i = 0; i < size; i++)
-		for (int j = 0; j < size; j++)
-			_minesMap[i][j] = 0;
+		_cellsMap[i] = new Cells[size];
 
-	bool* checkDuplicate = new bool[size * size];
-	for (int i = 0; i < size * size; i++) checkDuplicate[i] = 0;
-
-	srand(time(0));
 	int n = _numOfMines;
+	srand(time(0));
 	while (n) {
 		int i = rand() % (size * size);
-		if (!checkDuplicate[i]) {
-			checkDuplicate[i] = 1;
-			_minesMap[i % size][i / size] = 1;
+		if (!_cellsMap[i % size][i / size].getMine()) {
+			_cellsMap[i % size][i / size].setMine(1);
 			n--;
 		}
 	}
@@ -57,7 +50,7 @@ void Game::renderGameData(int size)
 {
 	for (int i = 0; i < size; i++) {
 		for (int j = 0; j < size; j++) {
-			std::cout << _minesMap[i][j] << " ";
+			std::cout << _cellsMap[i][j].getMine() << " ";
 		}
 		std::cout << '\n';
 	}
