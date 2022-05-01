@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Common.h"
+#include "Cell.h"
 #include <iostream>
 
 const int CELL_HEIGHT = 3;
@@ -14,6 +15,7 @@ private:
 	int _flagsPlaced = 0;
 	int _cellsDigged = 0;
 	bool** _minesMap = nullptr;
+	Cells** _cellsMap;
 
 public:
 	Game();
