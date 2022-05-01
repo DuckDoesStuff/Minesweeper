@@ -8,8 +8,8 @@
 
 class Menu {
 private:
-	const int _opt = 5;			//number of options
-	const std::string _selections[5] = {"Easy", "Medium", "Difficult", "Leaderboard", "Exit"}; //selections
+	const int _opt = 4;			//number of options
+	const std::string _selections[4] = {"Easy", "Hard", "Leaderboard", "Exit"}; //selections
 public:
 	Menu();
 	~Menu();

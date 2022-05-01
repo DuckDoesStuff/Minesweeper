@@ -13,7 +13,7 @@ void Game::setUpGame(int size) {
 	Common::clearConsole();
 	drawGame(size);
 	generateGameData(size);
-	//renderGameData(size); 
+	renderGameData(size); 
 }
 
 void Game::generateGameData(int size)
@@ -49,11 +49,12 @@ void Game::generateGameData(int size)
 
 void Game::renderGameData(int size)
 {
-	for (int i = 0; i < size; i++) {
-		for (int j = 0; j < size; j++) {
-			std::cout << _cellsMap[i][j].getMine() << " ";
+	int left = 2, top = 1;
+	for (int i = 0; i < size * CELL_HEIGHT; i += CELL_HEIGHT) {
+		for (int j = 0; j < size * CELL_LENGTH; j += CELL_LENGTH) {
+			Common::gotoXY(left + j, top + i);
+			std::cout << _cellsMap[i / CELL_HEIGHT][j / CELL_LENGTH].getMine();
 		}
-		std::cout << '\n';
 	}
 	Sleep(20000);
 }
@@ -64,7 +65,6 @@ void Game::drawGame(int size) {//vẽ ra bảng game
 	drawVerticalLine(size, left, top);
 	drawCorner(size, left, top);
 	drawLinkLine(size, left, top);
-	Sleep(50000);
 }
 
 void Game::drawHorizontalLine(int size, int left, int top) {
