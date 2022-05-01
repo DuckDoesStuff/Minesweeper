@@ -10,6 +10,7 @@ void Common::setupConsole(int fontSize, int background, int text)
 	disableMaximize();
 	setConsoleTitle();
 	setConsoleColor(background, text);
+	disableMouseInput();
 	hideScrollBars();
 	hideCursor();
 }
@@ -22,6 +23,14 @@ void Common::gotoXY(int left, int top)
 void Common::setConsoleColor(int background, int text)
 {
 	SetConsoleTextAttribute(consoleOutput, background * 16 + text);
+}
+
+void Common::disableMouseInput()
+{
+	DWORD prev_mode;
+	HANDLE hInput = GetStdHandle(STD_INPUT_HANDLE);
+	GetConsoleMode(hInput, &prev_mode);
+	SetConsoleMode(hInput, prev_mode & ~ENABLE_QUICK_EDIT_MODE);
 }
 
 void Common::setAndCenterWindow()

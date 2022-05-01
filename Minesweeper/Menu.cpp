@@ -25,7 +25,7 @@ void Menu::printTitle()
 
 	Common().setConsoleColor(BLACK, RED);
 
-	int left = 11, top = 2;
+	int left = 9, top = 2;
 	int i = 0;
 	while (!in.eof())
 	{
