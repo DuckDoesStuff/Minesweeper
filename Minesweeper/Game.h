@@ -19,4 +19,7 @@ public:
 
 	void setUpGame(int);
 	void drawGame(int);
+	void drawHorizontalLine(int, int, int);
+	void drawVerticalLine(int, int, int);
+	void drawCorner(int, int, int);
 };

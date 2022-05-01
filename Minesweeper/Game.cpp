@@ -16,14 +16,15 @@ void Game::setUpGame(int size) {
 
 void Game::drawGame(int size) {//vẽ ra bảng game
 	int left = 0, top = 0;
-	drawHorizontalLine (size,left,top);
+	drawHorizontalLine(size,left, top);
 	drawVerticalLine(size, left, top);
 	drawCorner(size, left, top);
 	Sleep(50000);
 	
 }
 
-void drawHorizontalLine(int size, int left, int top) {
+
+void Game::drawHorizontalLine(int size, int left, int top) {
 	Common::gotoXY(left, top);
 	for (int i = 0; i <= CELL_HEIGHT * size; i += CELL_HEIGHT) {
 		Common().gotoXY(left, top + i);
@@ -33,7 +34,7 @@ void drawHorizontalLine(int size, int left, int top) {
 	}
 }
 
-void drawVerticalLine(int size, int left, int top) {
+void Game::drawVerticalLine(int size, int left, int top) {
 	// left
 	for (int i = 1; i < CELL_HEIGHT * size; i++) {
 		Common().gotoXY(left, top + i);
@@ -46,7 +47,7 @@ void drawVerticalLine(int size, int left, int top) {
 	}
 }
 
-void drawCorner(int size, int left, int top) {
+void Game::drawCorner(int size, int left, int top) {
 	Common().gotoXY(left, top); //  tren ben trai
 	putchar(201);
 
@@ -58,5 +59,4 @@ void drawCorner(int size, int left, int top) {
 
 	Common().gotoXY(left + CELL_LENGTH * size, top + CELL_HEIGHT * size); // duoi ben phai
 	putchar(188);
-
 }
