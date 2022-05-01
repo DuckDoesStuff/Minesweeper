@@ -9,46 +9,51 @@ Game::~Game() {
 
 }
 
-///////////////////////////////////////
+//////////////////////////////////////////////////////
 
 void Game::playGame(int size)
 {
 	_size = size;
 	setupGame();
 
-	std::pair<int, int> currCell;//Initialize highlight cell 
-	currCell.first = 0, currCell.second = 0;
+	std::pair<int, int> currCell = { 0, 0 };		//Initialize selected cell 
 	selectCell(currCell);
-	while (true) {
-		int c = Common::getConsoleInput();
+
+	int c = 1;
+	while (c) {
+		c = Common::getConsoleInput();
 		switch (c) {
-		case 2://Up
+		case 2:				//Up
 			if (currCell.second == 0) break;
 			unselectCell(currCell);
 			currCell.second--;
 			selectCell(currCell);
 			break;
-		case 3://Left
+		case 3:				//Left
 			if (currCell.first == 0) break;
 			unselectCell(currCell);
 			currCell.first--;
 			selectCell(currCell);
 			break;
-		case 4://Right
+		case 4:				//Right
 			if (currCell.first == _size - 1) break;
 			unselectCell(currCell);
 			currCell.first++;
 			selectCell(currCell);
 			break;
-		case 5://Down
+		case 5:				//Down
 			if (currCell.second == _size - 1) break;
 			unselectCell(currCell);
 			currCell.second++;
 			selectCell(currCell);
 			break;
-		case 6://Enter
+		case 6:				//Enter
 			break;
-		default:break;
+		case 7:				//J, j(dig)
+			break;
+		case 8:				//K, k(flag)
+			break;
+		default:break;;
 		}
 	}
 }
@@ -117,7 +122,7 @@ void Game::drawGame() {//vẽ ra bảng game
 	drawLinkLine();
 }
 
-///////////////////////////////////////
+//////////////////////////////////////////////////////
 
 void Game::drawHorizontalLine() {
 	for (int i = 0; i <= CELL_HEIGHT * _size; i += CELL_HEIGHT) {
@@ -175,7 +180,7 @@ void Game::drawLinkLine()
 	}
 }
 
-///////////////////////////////////////
+//////////////////////////////////////////////////////
 
 std::pair<int, int> Game::convertCoord(int left, int top)//currently useless
 {
@@ -190,8 +195,6 @@ void Game::selectCell(std::pair<int, int> currCell)
 		Common::gotoXY(_left + currCell.first*CELL_LENGTH + i, _top + currCell.second*CELL_HEIGHT + 1);
 		putchar(' ');
 	}
-
-	Common::setConsoleColor(BLACK, BRIGHT_WHITE);
 }
 
 void Game::unselectCell(std::pair<int, int> currCell)
@@ -202,4 +205,8 @@ void Game::unselectCell(std::pair<int, int> currCell)
 		Common::gotoXY(_left + currCell.first * CELL_LENGTH + i, _top + currCell.second * CELL_HEIGHT + 1);
 		putchar(' ');
 	}
+}
+
+void Game::countNumOfMines(std::pair<int, int>)//count number of mines around a cell
+{
 }

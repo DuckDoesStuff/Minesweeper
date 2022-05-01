@@ -124,7 +124,7 @@ int Common::getConsoleInput()
 		case 80:				//xuống
 			return 5;
 		default:				//nút khác
-			return 0;
+			return 1;
 		}
 	}
 	else
@@ -141,9 +141,9 @@ int Common::getConsoleInput()
 			return 5;
 		else if (c == 13)             //Enter
 			return 6;
-		else if (c == 72 || c == 104) //H, h
+		else if (c == 74 || c == 106) //J, j
 			return 7;
-		else if (c == 77 || c == 109) //M, m
+		else if (c == 75 || c == 107) //K, k
 			return 8;
 		else
 			return 0;                 //nút khác

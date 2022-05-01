@@ -24,8 +24,3 @@ void Cells::setMine(bool mine)
 {
 	_hasMine = mine;
 }
-
-void Cells::countNumOfMines(Cells** cell)
-{
-	return;
-}

@@ -19,6 +19,4 @@ public:
 
 	void setStatus(int);
 	void setMine(bool);
-
-	void countNumOfMines(Cells**);
 };
