@@ -28,4 +28,5 @@ public:
 	void drawHorizontalLine(int, int, int);
 	void drawVerticalLine(int, int, int);
 	void drawCorner(int size, int left, int top);
+	void drawLinkLine(int size, int left, int top);
 };

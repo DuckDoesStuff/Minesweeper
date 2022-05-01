@@ -10,11 +10,10 @@ Game::~Game() {
 }
 
 void Game::setUpGame(int size) {
-	Common().setFontInfo(18, 18);
 	Common::clearConsole();
-	//drawGame(size);
+	drawGame(size);
 	generateGameData(size);
-	renderGameData(size);
+	//renderGameData(size); 
 }
 
 void Game::generateGameData(int size)
@@ -64,6 +63,7 @@ void Game::drawGame(int size) {//vẽ ra bảng game
 	drawHorizontalLine(size,left, top);
 	drawVerticalLine(size, left, top);
 	drawCorner(size, left, top);
+	drawLinkLine(size, left, top);
 	Sleep(50000);
 }
 
@@ -97,4 +97,28 @@ void Game::drawCorner(int size, int left, int top) {
 
 	Common().gotoXY(left + CELL_LENGTH * size, top + CELL_HEIGHT * size); // duoi ben phai
 	putchar(188);
+}
+
+void Game::drawLinkLine(int size, int left, int top)
+{
+	for (int i = CELL_LENGTH; i < CELL_LENGTH * size; i += CELL_LENGTH) {
+		Common().gotoXY(left + i, top);
+		putchar(203);
+		Common().gotoXY(left + i, top + CELL_HEIGHT * size);
+		putchar(202);
+	}
+
+	for (int i = CELL_HEIGHT; i < CELL_HEIGHT * size; i += CELL_HEIGHT) {
+		Common().gotoXY(left, top + i);
+		putchar(204);
+		Common().gotoXY(left + CELL_LENGTH * size, top + i);
+		putchar(185);
+	}
+
+	for (int i = CELL_LENGTH; i < CELL_LENGTH * size; i += CELL_LENGTH) {
+		for (int j = CELL_HEIGHT; j < CELL_HEIGHT * size; j += CELL_HEIGHT) {
+			Common().gotoXY(left+i, top + j);
+			putchar(206);
+		}
+	}
 }
