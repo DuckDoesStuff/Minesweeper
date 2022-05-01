@@ -47,6 +47,29 @@ void Common::setAndCenterWindow()
 void Common::hideScrollBars()
 {
 	ShowScrollBar(consoleWindow, SB_BOTH, 0);
+
+	// get handle to the console window
+	HANDLE hOut = GetStdHandle(STD_OUTPUT_HANDLE);
+
+	// retrieve screen buffer info
+	CONSOLE_SCREEN_BUFFER_INFO scrBufferInfo;
+	GetConsoleScreenBufferInfo(hOut, &scrBufferInfo);
+
+	// current window size
+	short winWidth = scrBufferInfo.srWindow.Right - scrBufferInfo.srWindow.Left + 1;
+	short winHeight = scrBufferInfo.srWindow.Bottom - scrBufferInfo.srWindow.Top + 1;
+
+	// current screen buffer size
+	short scrBufferWidth = scrBufferInfo.dwSize.X;
+	short scrBufferHeight = scrBufferInfo.dwSize.Y;
+
+	// to remove the scrollbar, make sure the window height matches the screen buffer height
+	COORD newSize;
+	newSize.X = scrBufferWidth;
+	newSize.Y = winHeight;
+
+	// set the new screen buffer dimensions
+	int Status = SetConsoleScreenBufferSize(hOut, newSize);
 }
 
 void Common::hideCursor()
@@ -107,7 +130,7 @@ int Common::getConsoleInput()
 	else
 	{
 		if (c == 27)                  //esc
-			return 1;
+			return 0;
 		else if (c == 87 || c == 119) //W, w
 			return 2;
 		else if (c == 65 || c == 97)  //A, a

@@ -9,7 +9,6 @@ const int CELL_LENGTH = 4;
 
 class Game {
 private:
-	int _size = 0;
 	int _numOfMines = 0;
 	int _numOfFlags = 0;
 	int _flagsPlaced = 0;
@@ -18,15 +17,28 @@ private:
 	Cells** _cellsMap;
 
 public:
+	int _left = 0, _top = 0, _size = 0;//Position of board game and board size
 	Game();
 	~Game();
 
-	void setUpGame(int);
-	void generateGameData(int);
-	void renderGameData(int);
-	void drawGame(int);
-	void drawHorizontalLine(int, int, int);
-	void drawVerticalLine(int, int, int);
-	void drawCorner(int size, int left, int top);
-	void drawLinkLine(int size, int left, int top);
+	///////////////////////////////////////
+
+	void setupGame();
+	void playGame(int);
+	void generateGameData();
+	void renderGameData();
+	void drawGame();
+
+	///////////////////////////////////////
+
+	void drawHorizontalLine();
+	void drawVerticalLine();
+	void drawCorner();
+	void drawLinkLine();
+
+	///////////////////////////////////////
+
+	std::pair<int, int> convertCoord(int, int);
+	void selectCell(std::pair<int, int>);
+	void unselectCell(std::pair<int, int>);
 };

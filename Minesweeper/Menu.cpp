@@ -148,10 +148,10 @@ void Menu::renderCurOpt()
 
 	switch (slt) {
 	case 0://Play easy
-		Game().setUpGame(10);
+		Game().playGame(10);
 		break;
 	case 1://Play hard
-		Game().setUpGame(15);
+		Game().playGame(15);
 		break;
 	case 3://Leaderboard
 		break;

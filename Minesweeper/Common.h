@@ -33,7 +33,7 @@ private:
 public:
 	static void setupConsole(int fontSize, int background, int text);
 	static void gotoXY(int, int);
-	static void setConsoleColor(int, int);
+	static void setConsoleColor(int, int);//change background and text color
 	static void disableMouseInput();
 	static void setAndCenterWindow();
 	static void hideScrollBars();
