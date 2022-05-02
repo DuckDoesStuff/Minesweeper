@@ -274,12 +274,12 @@ void Game::drawUnDugCells()
 	Common::setConsoleColor(BLACK, BRIGHT_WHITE);
 }
 
-void Game::drawSideLineY(int x, int y, int length)
+void Game::drawSideLineY(int x, int y, int length, int type)
 {
 	Common::gotoXY(x, y);
 	putchar(204);
 	for (int i = 0; i < length - 1; i++) {
-		putchar(205);
+		putchar(type);
 	}
 	putchar(185);
 }
@@ -296,8 +296,22 @@ void Game::outputText(int x, int y, std::string text, int margin)
 	}
 }
 
+void Game::outputIcon(int x, int y, int id, int margin)
+{
+	Common::gotoXY(x, y);
+	for (int i = 0; i < margin; i++) {
+		putchar(' ');
+	}
+	putchar(id);
+	for (int i = 0; i < margin; i++) {
+		putchar(' ');
+	}
+}
+
+
 void Game::drawLeaderBoard()
 {
+	//name , time , flag , mode 
 	int x = _left + CELL_LENGTH * _size + LDBOARD_MX;
 	int y = _top + LDBOARD_MY;
 	for (int i = 0; i <= LDBOARD_LENGTH; i++) {
@@ -313,9 +327,24 @@ void Game::drawLeaderBoard()
 		Common::gotoXY(x + LDBOARD_LENGTH, y + i);
 		putchar(186);
 	}
+	//HEADER 
+	int marginTop = 4;
+	int marginX = 3;
+	int padding = 2;
 	drawCorner(x, y, LDBOARD_LENGTH, LDBOARD_HEIGHT);
-	drawSideLineY(x, y + 4, LDBOARD_LENGTH);
-	outputText(x + 1, y + 2, "SCORE BOARD", 7);
+	drawSideLineY(x, y + marginTop, LDBOARD_LENGTH,205);
+	outputText(x + 2, y + padding, "SCORE BOARD", 6);
+	outputIcon(x + marginX, y + padding, 3, 0);
+	outputIcon(x + LDBOARD_LENGTH - marginX, y + padding, 3, 0);
+	outputText(x + marginX, y + padding + 4, "Name: ", 2);
+	outputIcon(x + marginX - 1, y + padding + 4, 16, 1);
+	outputText(x + marginX, y + padding + 6, "Mode: ", 2);
+	outputIcon(x + marginX - 1, y + padding + 6, 16, 1);
+	drawSideLineY(x, y + padding + 8, LDBOARD_LENGTH, 250);
+	outputText(x + marginX, y + padding + 10, "Flag: ", 2);
+	outputIcon(x + marginX - 1, y + padding + 10, 35, 1);
+	outputText(x + marginX, y + padding + 12, "Time: ", 2);
+	outputIcon(x + marginX - 1, y + padding + 12, 232, 1);
 }
 
 //////////////////////////////////////////////////////
