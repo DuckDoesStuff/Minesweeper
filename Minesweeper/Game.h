@@ -8,8 +8,8 @@ const int CELL_HEIGHT = 2;
 const int CELL_LENGTH = 4;
 const int LDBOARD_MX = 5;
 const int LDBOARD_MY = 0;
-const int LDBOARD_LENGTH = 25;
-const int LDBOARD_HEIGHT = 15;
+const int LDBOARD_LENGTH = 26;
+const int LDBOARD_HEIGHT = 16;
 
 class Game {
 private:
@@ -43,8 +43,9 @@ public:
 	void drawCorner(int, int,int , int);
 	void drawLinkLine();
 	void drawUnDugCells();
-	void drawSideLineY(int x, int y, int length);
+	void drawSideLineY(int x, int y, int length,int type);
 	void outputText(int x, int y, std::string, int margin);
+	void outputIcon(int x, int y, int id, int margin);
 	void drawLeaderBoard();
 
 	//////////////////////////////////////////////////////
