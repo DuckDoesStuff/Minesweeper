@@ -49,12 +49,11 @@ void Game::playGame(int size)
 			break;
 		case 7:				//J, j(dig)
 			if (_cellsMap[currCell.second][currCell.first].getMine()) exit(1);
-			countNumOfMines(currCell);
+			countNumOfMines(currCell);	
 			_cellsMap[currCell.second][currCell.first].setStatus(0);
-			if (_cellsMap[currCell.second][currCell.first].getNumOfMines() == 0) {
-				digNeighbor(currCell);	//Mark as has been dug
-			}
-
+			//if (_cellsMap[currCell.second][currCell.first].getNumOfMines() == 0) {
+			//	digNeighbor(currCell);	//Mark as has been dug
+			//}
 			selectCell(currCell);
 			break;
 		case 8:				//K, k(flag)
@@ -202,7 +201,7 @@ std::pair<int, int> Game::convertCoord(int left, int top)//currently useless
 	return std::pair<int, int>((left - _left) / CELL_LENGTH, (top - _top) / CELL_HEIGHT);//?
 }
 
-void Game::selectCell(std::pair<int, int> currCell)
+void Game::selectCell(std::pair<int, int> currCell) // hien thi so
 {
 	Common::setConsoleColor(RED, BRIGHT_WHITE);
 
@@ -291,37 +290,37 @@ void Game::countNumOfMines(std::pair<int, int> currCell)//count number of mines 
 	_cellsMap[currCell.first][currCell.second].setNumOfMines(count);
 }
 
-void Game::digNeighbor(std::pair<int, int> currCell) {
-
-
-	std::pair<short, short> start, end;
-
-	start.first = currCell.first - 1;
-	end.first = currCell.first + 1;
-	start.second = currCell.second - 1;
-	end.second = currCell.second + 1;
-
-	if (currCell.first == 0) start.first++;
-	else if (currCell.first == _size - 1) end.first--;
-
-	if (currCell.second == 0) start.second++;
-	else if (currCell.second == _size - 1) end.second--;
-
-	for (short i = start.second; i <= end.second; i++)
-	{
-		for (short j = start.first; j <= end.first; j++)
-		{
-			std::pair <int, int> temp = { j,i };
-			if (_cellsMap[temp.second][temp.first].getStatus() == 0 || _cellsMap[temp.second][temp.first].getMine()) continue;
-			_cellsMap[i][j].setStatus(0);
-			countNumOfMines(temp);
-			if (_cellsMap[temp.second][temp.first].getNumOfMines() != 0) {
-				colorCell(temp);
-			}
-			else {
-				digNeighbor(temp);
-			}
-		
-		}
-	}
-}
+//void Game::digNeighbor(std::pair<int, int> currCell) {
+//
+//
+//	std::pair<short, short> start, end;
+//
+//	start.first = currCell.first - 1;
+//	end.first = currCell.first + 1;
+//	start.second = currCell.second - 1;
+//	end.second = currCell.second + 1;
+//
+//	if (currCell.first == 0) start.first++;
+//	else if (currCell.first == _size - 1) end.first--;
+//
+//	if (currCell.second == 0) start.second++;
+//	else if (currCell.second == _size - 1) end.second--;
+//
+//	for (short i = start.second; i <= end.second; i++)
+//	{
+//		for (short j = start.first; j <= end.first; j++)
+//		{
+//			std::pair <int, int> temp = { j,i };
+//			if (_cellsMap[temp.second][temp.first].getStatus() == 0 || _cellsMap[temp.second][temp.first].getMine() == 1) continue;
+//			_cellsMap[i][j].setStatus(0);
+//			countNumOfMines(temp);
+//			if (_cellsMap[temp.second][temp.first].getNumOfMines() != 0) {
+//				colorCell(temp);
+//			}
+//			else {
+//				digNeighbor(temp);
+//			}
+//		
+//		}
+//	}
+//}
