@@ -52,7 +52,7 @@ void Game::playGame(int size)
 		case 7:				//J, j(dig)
 			if (_cellsMap[currCell.second][currCell.first].getMine()) exit(1);
 			countNumOfMines(currCell);
-			_cellsMap[currCell.first][currCell.second].setStatus(0);
+			_cellsMap[currCell.first][currCell.second].setStatus(0);			//Mark as has been dug
 			selectCell(currCell);
 			break;
 		case 8:				//K, k(flag)
@@ -199,7 +199,8 @@ void Game::selectCell(std::pair<int, int> currCell)
 		putchar(' ');
 	}
 
-	if (!_cellsMap[currCell.first][currCell.second].getStatus()) {
+	if (!_cellsMap[currCell.first][currCell.second].getStatus() &&
+		_cellsMap[currCell.first][currCell.second].getNumOfMines() != 0) {
 		Common::gotoXY(_left + currCell.first * CELL_LENGTH + 2, _top + currCell.second * CELL_HEIGHT + 1);
 		std::cout << _cellsMap[currCell.first][currCell.second].getNumOfMines();
 		return;
@@ -249,19 +250,26 @@ void Game::unselectCell(std::pair<int, int> currCell)
 
 void Game::countNumOfMines(std::pair<int, int> currCell)//count number of mines around a cell
 {
-	//currCell chỉ là tọa độ của cell đang chọn
-	//phải chuyển vào tọa độ của _cellsMap
 	int count = 0;
-	int i = currCell.second - 1;
-	int j = currCell.first - 1;
 
-	
+	std::pair<short, short> start, end;
 
-	for (int k = i; k <= currCell.second + 1; k++)
+	start.first = currCell.first - 1;
+	end.first = currCell.first + 1;
+	start.second = currCell.second - 1;
+	end.second = currCell.second + 1;
+
+	if (currCell.first == 0) start.first++;
+	else if (currCell.first == _size - 1) end.first--;
+
+	if (currCell.second == 0) start.second++;
+	else if (currCell.second == _size - 1) end.second--;
+
+	for (short i = start.second; i <= end.second; i++)
 	{
-		for (int l = j; l <= currCell.first + 1; l++)
+		for (short j = start.first; j <= end.first; j++)
 		{
-			if (_cellsMap[k][l].getMine()) count++;
+			if (_cellsMap[i][j].getMine()) count++;
 		}
 	}
 
