@@ -201,10 +201,9 @@ std::pair<int, int> Game::convertCoord(int left, int top)//currently useless
 void Game::selectCell(std::pair<int, int> currCell)
 {
 	Common::setConsoleColor(RED, BRIGHT_WHITE);
-	for (int i = 1; i <= 3; i++) {
-		Common::gotoXY(_left + currCell.first*CELL_LENGTH + i, _top + currCell.second*CELL_HEIGHT + 1);
-		putchar(' ');
-	}
+
+	Common::gotoXY(_left + currCell.first*CELL_LENGTH + 1, _top + currCell.second*CELL_HEIGHT + 1);
+	std::cout << "   ";
 
 	if (!_cellsMap[currCell.first][currCell.second].getStatus() &&
 		_cellsMap[currCell.first][currCell.second].getNumOfMines() != 0) {
@@ -218,10 +217,8 @@ void Game::unselectCell(std::pair<int, int> currCell)
 {
 	Common::setConsoleColor(BLACK, BRIGHT_WHITE);
 
-	for (int i = 1; i <= 3; i++) {
-		Common::gotoXY(_left + currCell.first * CELL_LENGTH + i, _top + currCell.second * CELL_HEIGHT + 1);
-		putchar(' ');
-	}
+	Common::gotoXY(_left + currCell.first * CELL_LENGTH + 1, _top + currCell.second * CELL_HEIGHT + 1);
+	std::cout << "   ";
 
 	if (!_cellsMap[currCell.first][currCell.second].getStatus()) {
 		Common::gotoXY(_left + currCell.first * CELL_LENGTH + 2, _top + currCell.second * CELL_HEIGHT + 1);
