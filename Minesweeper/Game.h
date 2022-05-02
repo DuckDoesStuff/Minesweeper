@@ -11,9 +11,8 @@ class Game {
 private:
 
 	int _numOfMines = 0;
-	int _numOfFlags = 0;
-	int _flagsPlaced = 0;
-	int _cellsDigged = 0;
+	int _flagsPlaced = 0;			//Moi lan flag ++
+	int _cellsDigged = 0;			//Moi lan dig ++
 	Cells** _cellsMap;
 
 public:
@@ -38,6 +37,7 @@ public:
 	void drawVerticalLine();
 	void drawCorner();
 	void drawLinkLine();
+	void drawUnDugCells();
 
 	//////////////////////////////////////////////////////
 
