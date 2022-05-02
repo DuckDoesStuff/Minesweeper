@@ -8,7 +8,7 @@ const int CELL_HEIGHT = 2;
 const int CELL_LENGTH = 4;
 const int LDBOARD_MX = 5;
 const int LDBOARD_MY = 0;
-const int LDBOARD_LENGTH = 25;
+const int LDBOARD_LENGTH = 26;
 const int LDBOARD_HEIGHT = 15;
 
 class Game {
@@ -32,9 +32,10 @@ public:
 	void generateGameData();
 	void generateNumOfMines();
 	void generateMines();
-	void placeFlag(std::pair<int, int> currCell);
 	void renderGameData();
 	void drawGame();
+	void winScreen();
+	void tryAgain();
 
 	//////////////////////////////////////////////////////
 
@@ -53,6 +54,11 @@ public:
 	void selectCell(std::pair<int, int>);
 	void colorCell(std::pair <int, int>);
 	void unselectCell(std::pair<int, int>);
+
+	//////////////////////////////////////////////////////
+
 	void countNumOfMines(std::pair<int, int>);
 	void digNeighbor(std::pair<int, int>);
+	void placeFlag(std::pair<int, int>);
+	bool endGameCheck();
 };
