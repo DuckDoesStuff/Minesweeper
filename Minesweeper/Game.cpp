@@ -80,7 +80,7 @@ void Game::playGame(int size)
 	{
 		tryAgain();
 		c = Common::getConsoleInput();
-		if (c == 6) playGame(_size);
+		if (c == 6) playGame(size);
 	}
 }
 
@@ -96,6 +96,8 @@ void Game::generateGameData()
 {
 	generateNumOfMines();
 	generateMines();
+	_flagsPlaced = 0;
+	_cellsDigged = 0;
 }
 
 void Game::generateNumOfMines()
