@@ -43,6 +43,8 @@ public:
 
 	std::pair<int, int> convertCoord(int, int);
 	void selectCell(std::pair<int, int>);
+	void colorCell(std::pair <int, int>);
 	void unselectCell(std::pair<int, int>);
 	void countNumOfMines(std::pair<int, int>);
+	void digNeighbor(std::pair<int, int>);
 };
