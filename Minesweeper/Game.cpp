@@ -18,6 +18,7 @@ void Game::playGame(int size)
 	std::pair<int, int> currCell = { 0, 0 };		//Initialize selected cell 
 	selectCell(currCell);
 	int c = 1;
+	int count = 0;
 	while (c) {
 		c = Common::getConsoleInput();
 		switch (c) {
@@ -48,12 +49,14 @@ void Game::playGame(int size)
 		case 6:				//Enter
 			break;
 		case 7:				//J, j(dig)
-			if (_cellsMap[currCell.second][currCell.first].getMine()) exit(1);
-			countNumOfMines(currCell);	
-			_cellsMap[currCell.second][currCell.first].setStatus(0);
-			//if (_cellsMap[currCell.second][currCell.first].getNumOfMines() == 0) {
-			//	digNeighbor(currCell);	//Mark as has been dug
-			//}
+			if (_cellsMap[currCell.first][currCell.second].getMine()) exit(0);
+
+			countNumOfMines(currCell);
+			_cellsMap[currCell.first][currCell.second].setStatus(0);
+
+			if (_cellsMap[currCell.first][currCell.second].getNumOfMines() == 0)
+				digNeighbor(currCell);
+			
 			selectCell(currCell);
 			break;
 		case 8:				//K, k(flag)
@@ -81,7 +84,7 @@ void Game::generateNumOfMines()
 	switch (_size)
 	{
 	case 10:
-		_numOfMines = 20;
+		_numOfMines = 10;
 		break;
 	case 15:
 		_numOfMines = 40;
@@ -112,11 +115,11 @@ void Game::generateMines()
 
 void Game::renderGameData()
 {
-	int left = 0, top = 0;
+	int left = 2, top = 1;
 	for (int i = 0; i < _size * CELL_HEIGHT; i += CELL_HEIGHT) {
 		for (int j = 0; j < _size * CELL_LENGTH; j += CELL_LENGTH) {
 			Common::gotoXY(left + j, top + i);
-			std::cout << _cellsMap[i / CELL_HEIGHT][j / CELL_LENGTH].getMine();
+			std::cout << _cellsMap[j / CELL_LENGTH][i / CELL_HEIGHT].getMine();
 		}
 	}
 }
@@ -248,7 +251,6 @@ void Game::colorCell(std::pair<int, int> currCell)
 	return;
 }
 
-
 void Game::unselectCell(std::pair<int, int> currCell)
 {
 	Common::setConsoleColor(BLACK, BRIGHT_WHITE);
@@ -283,44 +285,42 @@ void Game::countNumOfMines(std::pair<int, int> currCell)//count number of mines 
 	{
 		for (short j = start.first; j <= end.first; j++)
 		{
-			if (_cellsMap[i][j].getMine()) count++;
+			if (_cellsMap[j][i].getMine()) count++;
 		}
 	}
 
 	_cellsMap[currCell.first][currCell.second].setNumOfMines(count);
 }
 
-//void Game::digNeighbor(std::pair<int, int> currCell) {
-//
-//
-//	std::pair<short, short> start, end;
-//
-//	start.first = currCell.first - 1;
-//	end.first = currCell.first + 1;
-//	start.second = currCell.second - 1;
-//	end.second = currCell.second + 1;
-//
-//	if (currCell.first == 0) start.first++;
-//	else if (currCell.first == _size - 1) end.first--;
-//
-//	if (currCell.second == 0) start.second++;
-//	else if (currCell.second == _size - 1) end.second--;
-//
-//	for (short i = start.second; i <= end.second; i++)
-//	{
-//		for (short j = start.first; j <= end.first; j++)
-//		{
-//			std::pair <int, int> temp = { j,i };
-//			if (_cellsMap[temp.second][temp.first].getStatus() == 0 || _cellsMap[temp.second][temp.first].getMine() == 1) continue;
-//			_cellsMap[i][j].setStatus(0);
-//			countNumOfMines(temp);
-//			if (_cellsMap[temp.second][temp.first].getNumOfMines() != 0) {
-//				colorCell(temp);
-//			}
-//			else {
-//				digNeighbor(temp);
-//			}
-//		
-//		}
-//	}
-//}
+void Game::digNeighbor(std::pair<int, int> currCell) {
+	std::pair<short, short> start, end;
+
+	start.first = currCell.first - 1;
+	end.first = currCell.first + 1;
+	start.second = currCell.second - 1;
+	end.second = currCell.second + 1;
+
+	if (currCell.first == 0) start.first++;
+	else if (currCell.first == _size - 1) end.first--;
+
+	if (currCell.second == 0) start.second++;
+	else if (currCell.second == _size - 1) end.second--;
+
+	for (short i = start.second; i <= end.second; i++)
+	{
+		for (short j = start.first; j <= end.first; j++)
+		{
+			std::pair <int, int> temp = { j, i };
+			if (_cellsMap[temp.first][temp.second].getStatus() == 0 || _cellsMap[temp.first][temp.second].getMine() == 1) continue;
+			countNumOfMines(temp);
+			_cellsMap[temp.first][temp.second].setStatus(0);
+
+			if (_cellsMap[temp.first][temp.second].getNumOfMines() != 0) {
+				colorCell(temp);
+			}
+			else {
+				digNeighbor(temp);
+			}
+		}
+	}
+}
