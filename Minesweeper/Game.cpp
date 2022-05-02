@@ -220,7 +220,7 @@ std::pair<int, int> Game::convertCoord(int left, int top)//currently useless
 	return std::pair<int, int>((left - _left) / CELL_LENGTH, (top - _top) / CELL_HEIGHT);//?
 }
 
-void Game::selectCell(std::pair<int, int> currCell)
+void Game::selectCell(std::pair<int, int> currCell) // hien thi so
 {
 	Common::setConsoleColor(RED, BRIGHT_WHITE);
 
