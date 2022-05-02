@@ -6,6 +6,10 @@
 
 const int CELL_HEIGHT = 2;
 const int CELL_LENGTH = 4;
+const int LDBOARD_MX = 5;
+const int LDBOARD_MY = 0;
+const int LDBOARD_LENGTH = 25;
+const int LDBOARD_HEIGHT = 15;
 
 class Game {
 private:
@@ -28,6 +32,7 @@ public:
 	void generateGameData();
 	void generateNumOfMines();
 	void generateMines();
+	void placeFlag(std::pair<int, int> currCell);
 	void renderGameData();
 	void drawGame();
 
@@ -35,9 +40,12 @@ public:
 
 	void drawHorizontalLine();
 	void drawVerticalLine();
-	void drawCorner();
+	void drawCorner(int, int,int , int);
 	void drawLinkLine();
 	void drawUnDugCells();
+	void drawSideLineY(int x, int y, int length);
+	void outputText(int x, int y, std::string, int margin);
+	void drawLeaderBoard();
 
 	//////////////////////////////////////////////////////
 

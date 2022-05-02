@@ -60,6 +60,8 @@ void Game::playGame(int size)
 			selectCell(currCell);
 			break;
 		case 8:				//K, k(flag)
+			placeFlag(currCell);
+			selectCell(currCell);
 			break;
 		default:break;
 		}
@@ -113,6 +115,14 @@ void Game::generateMines()
 	}
 }
 
+void Game::placeFlag(std::pair<int,int> currCell) 
+{
+	Common::gotoXY(currCell.first * CELL_LENGTH + 1 + _left, currCell.second * CELL_HEIGHT + 1 + _top);
+	Common::setConsoleColor(BLACK, LIGHT_PURPLE);
+	_cellsMap[currCell.first][currCell.second].setFlag(1);
+	std::cout << " # ";
+}
+
 void Game::renderGameData()
 {
 	int left = 2, top = 1;
@@ -123,6 +133,7 @@ void Game::renderGameData()
 		}
 	}
 }
+
 
 void Game::drawGame() {//vẽ ra bảng game
 	if (_size == 10) {
@@ -135,9 +146,10 @@ void Game::drawGame() {//vẽ ra bảng game
 	}
 	drawHorizontalLine();
 	drawVerticalLine();
-	drawCorner();
+	drawCorner(_left, _top, CELL_LENGTH * _size, CELL_HEIGHT * _size);
 	drawLinkLine();
 	drawUnDugCells();
+	drawLeaderBoard();
 }
 
 //////////////////////////////////////////////////////
@@ -160,17 +172,17 @@ void Game::drawVerticalLine() {
 	}
 }
 
-void Game::drawCorner() {
-	Common().gotoXY(_left, _top); //  tren ben trai
+void Game::drawCorner(int left, int top , int length, int height) {
+	Common().gotoXY(left, top); //  tren ben trai
 	putchar(201);
 
-	Common().gotoXY(_left + CELL_LENGTH * _size, _top); // tren ben phai
+	Common().gotoXY(left + length, top); // tren ben phai
 	putchar(187);
 
-	Common().gotoXY(_left, _top + CELL_HEIGHT * _size); // duoi ben trai
+	Common().gotoXY(left, top + height); // duoi ben trai
 	putchar(200);
 
-	Common().gotoXY(_left + CELL_LENGTH * _size, _top + CELL_HEIGHT * _size); // duoi ben phai
+	Common().gotoXY(left + length, top + height); // duoi ben phai
 	putchar(188);
 }
 
@@ -213,6 +225,50 @@ void Game::drawUnDugCells()
 	Common::setConsoleColor(BLACK, BRIGHT_WHITE);
 }
 
+void Game::drawSideLineY(int x, int y, int length)
+{
+	Common::gotoXY(x, y);
+	putchar(204);
+	for (int i = 0; i < length - 1; i++) {
+		putchar(205);
+	}
+	putchar(185);
+}
+
+void Game::outputText(int x, int y, std::string text, int margin)
+{
+	Common::gotoXY(x, y);
+	for (int i = 0; i < margin; i++) {
+		putchar(' ');
+	}
+	std::cout << text;
+	for (int i = 0; i < margin; i++) {
+		putchar(' ');
+	}
+}
+
+void Game::drawLeaderBoard()
+{
+	int x = _left + CELL_LENGTH * _size + LDBOARD_MX;
+	int y = _top + LDBOARD_MY;
+	for (int i = 0; i <= LDBOARD_LENGTH; i++) {
+		Common::gotoXY(x + i, y);
+		putchar(205);
+		Common::gotoXY(x + i, y + LDBOARD_HEIGHT);
+		putchar(205);
+	}
+	
+	for (int i = 1; i <= LDBOARD_HEIGHT; i++) {
+		Common::gotoXY(x, y + i);
+		putchar(186);
+		Common::gotoXY(x + LDBOARD_LENGTH, y + i);
+		putchar(186);
+	}
+	drawCorner(x, y, LDBOARD_LENGTH, LDBOARD_HEIGHT);
+	drawSideLineY(x, y + 4, LDBOARD_LENGTH);
+	outputText(x + 1, y + 2, "LEADER BOARD", 5, 0);
+}
+
 //////////////////////////////////////////////////////
 
 std::pair<int, int> Game::convertCoord(int left, int top)//currently useless
@@ -226,7 +282,11 @@ void Game::selectCell(std::pair<int, int> currCell) // hien thi so
 
 	Common::gotoXY(_left + currCell.first*CELL_LENGTH + 1, _top + currCell.second*CELL_HEIGHT + 1);
 	std::cout << "   ";
-
+	if (_cellsMap[currCell.first][currCell.second].getFlag()) {
+		Common::gotoXY(_left + currCell.first * CELL_LENGTH + 2, _top + currCell.second * CELL_HEIGHT + 1);
+		putchar(35);
+		return;
+	}
 	if (_cellsMap[currCell.first][currCell.second].getStatus()) {
 		Common::setConsoleColor(RED, GRAY);
 		Common::gotoXY(_left + currCell.first * CELL_LENGTH + 2, _top + currCell.second * CELL_HEIGHT + 1);
@@ -245,7 +305,12 @@ void Game::selectCell(std::pair<int, int> currCell) // hien thi so
 
 void Game::colorCell(std::pair<int, int> currCell)
 {
-
+	if (_cellsMap[currCell.first][currCell.second].getFlag()) {
+		Common::gotoXY(_left + currCell.first * CELL_LENGTH + 2, _top + currCell.second * CELL_HEIGHT + 1);
+		Common::setConsoleColor(BLACK, LIGHT_PURPLE);
+		putchar(35);
+		return;
+	}
 	if (_cellsMap[currCell.first][currCell.second].getStatus()) {
 		Common::gotoXY(_left + currCell.first * CELL_LENGTH + 2, _top + currCell.second * CELL_HEIGHT + 1);
 		Common::setConsoleColor(BLACK, GRAY);
