@@ -8,15 +8,16 @@ class Cells {
 private:
 
 	bool _hasMine = 0;
-	int _status = 1;		//1: NORMAL, -1: DUG
+	bool _status = 1;		//1: NORMAL, 0: DUG
 	int _numOfMinesAround = 0;
 
 public:
 
-	int getStatus();
+	bool getStatus();
 	bool getMine();
 	int getNumOfMines();
 
-	void setStatus(int);
+	void setStatus(bool);
 	void setMine(bool);
+	void setNumOfMines(int);
 };
