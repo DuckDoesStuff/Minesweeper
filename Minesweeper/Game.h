@@ -27,6 +27,8 @@ public:
 	void setupGame();
 	void playGame(int);
 	void generateGameData();
+	void generateNumOfMines();
+	void generateMines();
 	void renderGameData();
 	void drawGame();
 

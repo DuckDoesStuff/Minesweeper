@@ -15,10 +15,8 @@ void Game::playGame(int size)
 {
 	_size = size;
 	setupGame();
-
 	std::pair<int, int> currCell = { 0, 0 };		//Initialize selected cell 
 	selectCell(currCell);
-
 	int c = 1;
 	while (c) {
 		c = Common::getConsoleInput();
@@ -67,6 +65,12 @@ void Game::setupGame() {
 
 void Game::generateGameData()
 {
+	generateNumOfMines();
+	generateMines();
+}
+
+void Game::generateNumOfMines()
+{
 	switch (_size)
 	{
 	case 10:
@@ -80,7 +84,10 @@ void Game::generateGameData()
 	default:
 		break;
 	}
+}
 
+void Game::generateMines()
+{
 	_cellsMap = new Cells * [_size];
 	for (int i = 0; i < _size; i++)
 		_cellsMap[i] = new Cells[_size];
@@ -207,6 +214,7 @@ void Game::unselectCell(std::pair<int, int> currCell)
 	}
 }
 
-void Game::countNumOfMines(std::pair<int, int>)//count number of mines around a cell
+void Game::countNumOfMines(std::pair<int, int> currCell)//count number of mines around a cell
 {
+
 }
