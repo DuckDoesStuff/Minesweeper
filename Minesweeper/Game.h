@@ -51,15 +51,24 @@ public:
 
 	//////////////////////////////////////////////////////
 
-	std::pair<int, int> convertCoord(int, int);
-	void selectCell(std::pair<int, int>);
-	void colorCell(std::pair <int, int>);
-	void unselectCell(std::pair<int, int>);
+	void moveUp(std::pair<int, int>&);
+	void moveLeft(std::pair<int, int>&);
+	void moveRight(std::pair<int, int>&);
+	void moveDown(std::pair<int, int>&);
 
 	//////////////////////////////////////////////////////
 
-	void countNumOfMines(std::pair<int, int>);
-	void digNeighbor(std::pair<int, int>);
-	void placeFlag(std::pair<int, int>);
+	std::pair<int, int> convertCoord(int, int);
+	void selectCell(std::pair<int, int>&);
+	void colorCell(std::pair <int, int>&);
+	void unselectCell(std::pair<int, int>&);
+	void deleteMidLines(std::pair<int, int>&);
+
+	//////////////////////////////////////////////////////
+
+	void countNumOfMines(std::pair<int, int>&);
+	void digCell(std::pair<int, int>&);
+	void digNeighbor(std::pair<int, int>&);
+	void placeFlag(std::pair<int, int>&);
 	bool endGameCheck();
 };
