@@ -141,6 +141,13 @@ void Game::drawGame() {//vẽ ra bảng game
 	drawLeaderBoard();
 }
 
+void Game::cleanAndLinkLine(std::pair <int,int> currCeLL)
+{
+	
+}
+
+
+
 void Game::winScreen()
 {
 	int left = 0, top = 0;
