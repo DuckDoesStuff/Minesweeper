@@ -84,10 +84,10 @@ void Game::generateNumOfMines()
 	switch (_size)
 	{
 	case 10:
-		_numOfMines = 10;
+		_numOfMines = 2;
 		break;
 	case 15:
-		_numOfMines = 40;
+		_numOfMines = 30;
 		break;
 	case 25:
 		_numOfMines = 100;
@@ -464,10 +464,69 @@ void Game::unselectCell(std::pair<int, int> &currCell)
 void Game::deleteMidLines(std::pair<int, int> &currCell)
 {
 	std::pair<short, short> tmp;
+	Common::setConsoleColor(BLACK, BRIGHT_WHITE);
 
-	tmp.first = currCell.first - 1;
-	tmp.second = currCell.second;
+	bool W = 0, N = 0, E = 0, S = 0;
 
+	//Left cell
+	if (currCell.first != 0) {
+		tmp = { currCell.first - 1, currCell.second };
+		if (_cellsMap[tmp.first][tmp.second].getStatus() == 0 &&
+			_cellsMap[tmp.first][tmp.second].getNumOfMines() == 0) {
+			Common::gotoXY(_left + tmp.first * CELL_LENGTH + 4, _top + tmp.second * CELL_HEIGHT + 1);
+			putchar(' ');
+		}
+		/*Common::gotoXY(_left + currCell.first * CELL_LENGTH, _top + currCell.second * CELL_HEIGHT);
+		putchar(188);
+		Common::gotoXY(_left + currCell.first * CELL_LENGTH, _top + currCell.second * CELL_HEIGHT + 2);
+		putchar(187);*/
+		if (tmp.second == 0) {
+			Common::gotoXY(_left + tmp.first * CELL_LENGTH + 4, _top + tmp.second * CELL_HEIGHT);
+			putchar(205);
+		}
+	}
+
+	//Right cell
+	if (currCell.first != _size - 1) {
+		tmp = { currCell.first + 1, currCell.second };
+		if (_cellsMap[tmp.first][tmp.second].getStatus() == 0 &&
+			_cellsMap[tmp.first][tmp.second].getNumOfMines() == 0) {
+			Common::gotoXY(_left + tmp.first * CELL_LENGTH, _top + tmp.second * CELL_HEIGHT + 1);
+			putchar(' ');
+		}
+		if (tmp.second == _size - 1) {
+			Common::gotoXY(_left + tmp.first * CELL_LENGTH, _top + tmp.second * CELL_HEIGHT + 2);
+			putchar(205);
+		}
+	}
+
+	//Top cell
+	if (currCell.second != 0) {
+		tmp = { currCell.first, currCell.second - 1 };
+		if (_cellsMap[tmp.first][tmp.second].getStatus() == 0 &&
+			_cellsMap[tmp.first][tmp.second].getNumOfMines() == 0) {
+			Common::gotoXY(_left + tmp.first * CELL_LENGTH + 1, _top + tmp.second * CELL_HEIGHT + 2);
+			std::cout << "   ";
+		}
+		if (tmp.first == 0) {
+			Common::gotoXY(_left + tmp.first * CELL_LENGTH, _top + tmp.second * CELL_HEIGHT + 2);
+			putchar(186);
+		}
+	}
+
+	//Bottom cell
+	if (currCell.second != _size - 1) {
+		tmp = { currCell.first, currCell.second + 1 };
+		if (_cellsMap[tmp.first][tmp.second].getStatus() == 0 &&
+			_cellsMap[tmp.first][tmp.second].getNumOfMines() == 0) {
+			Common::gotoXY(_left + tmp.first * CELL_LENGTH + 1, _top + tmp.second * CELL_HEIGHT);
+			std::cout << "   ";
+		}
+		if (tmp.first == _size - 1) {
+			Common::gotoXY(_left + tmp.first * CELL_LENGTH + 4, _top + tmp.second * CELL_HEIGHT);
+			putchar(186);
+		}
+	}
 
 
 }
@@ -510,7 +569,7 @@ void Game::digCell(std::pair<int, int>& currCell)
 
 	if (_cellsMap[currCell.first][currCell.second].getNumOfMines() == 0)
 		digNeighbor(currCell);
-	
+	  
 	selectCell(currCell);
 }
 
@@ -541,9 +600,10 @@ void Game::digNeighbor(std::pair<int, int> &currCell)
 			colorCell(temp);
 
 			if (_cellsMap[temp.first][temp.second].getNumOfMines() != 0)
-				colorCell(temp);
+				continue;
 			else
 				digNeighbor(temp);
+			deleteMidLines(temp);
 		}
 	}
 }
