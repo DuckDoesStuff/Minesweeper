@@ -4,6 +4,7 @@
 #include "Cell.h"
 #include <iostream>
 
+#define cell _cellsMap[currCell.first][currCell.second]
 const int CELL_HEIGHT = 2;
 const int CELL_LENGTH = 4;
 const int LDBOARD_MX = 5;
@@ -18,7 +19,6 @@ private:
 	int _flagsPlaced = 0;			//Moi lan flag ++
 	int _cellsDigged = 0;			//Moi lan dig ++
 	Cells** _cellsMap;
-	bool** _diggedMap;
 
 public:
 
