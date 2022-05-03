@@ -314,6 +314,7 @@ void Game::drawLeaderBoard()
 	//name , time , flag , mode 
 	int x = _left + CELL_LENGTH * _size + LDBOARD_MX;
 	int y = _top + LDBOARD_MY;
+	Common::setConsoleColor(BLACK, WHITE);
 	for (int i = 0; i <= LDBOARD_LENGTH; i++) {
 		Common::gotoXY(x + i, y);
 		putchar(205);
@@ -321,6 +322,7 @@ void Game::drawLeaderBoard()
 		putchar(205);
 	}
 	
+
 	for (int i = 1; i <= LDBOARD_HEIGHT; i++) {
 		Common::gotoXY(x, y + i);
 		putchar(186);
@@ -333,14 +335,18 @@ void Game::drawLeaderBoard()
 	int padding = 2;
 	drawCorner(x, y, LDBOARD_LENGTH, LDBOARD_HEIGHT);
 	drawSideLineY(x, y + marginTop, LDBOARD_LENGTH,205);
+	drawSideLineY(x, y + padding + 8, LDBOARD_LENGTH, 250);
+	Common::setConsoleColor(BLACK, PURPLE);
 	outputText(x + 2, y + padding, "SCORE BOARD", 6);
+	Common::setConsoleColor(BLACK, RED);
 	outputIcon(x + marginX, y + padding, 3, 0);
 	outputIcon(x + LDBOARD_LENGTH - marginX, y + padding, 3, 0);
+	Common::setConsoleColor(BLACK, LIGHT_PURPLE);
 	outputText(x + marginX, y + padding + 4, "Name: ", 2);
 	outputIcon(x + marginX - 1, y + padding + 4, 16, 1);
 	outputText(x + marginX, y + padding + 6, "Mode: ", 2);
 	outputIcon(x + marginX - 1, y + padding + 6, 16, 1);
-	drawSideLineY(x, y + padding + 8, LDBOARD_LENGTH, 250);
+	Common::setConsoleColor(BLACK, RED);
 	outputText(x + marginX, y + padding + 10, "Flag: ", 2);
 	outputIcon(x + marginX - 1, y + padding + 10, 35, 1);
 	outputText(x + marginX, y + padding + 12, "Time: ", 2);
