@@ -68,7 +68,7 @@ void Game::setupGame() {
 	Common::clearConsole();
 	generateGameData();
 	drawGame();
-	renderGameData(); 
+	//renderGameData(); 
 }
 
 void Game::generateGameData()
@@ -84,10 +84,10 @@ void Game::generateNumOfMines()
 	switch (_size)
 	{
 	case 10:
-		_numOfMines = 2;
+		_numOfMines = 5;
 		break;
 	case 15:
-		_numOfMines = 30;
+		_numOfMines = 10;
 		break;
 	case 25:
 		_numOfMines = 100;
@@ -466,7 +466,7 @@ void Game::deleteMidLines(std::pair<int, int> &currCell)
 	std::pair<short, short> tmp;
 	Common::setConsoleColor(BLACK, BRIGHT_WHITE);
 
-	bool W = 0, N = 0, E = 0, S = 0;
+	bool L = 0, R = 0, T = 0, B = 0;
 
 	//Left cell
 	if (currCell.first != 0) {
@@ -475,15 +475,12 @@ void Game::deleteMidLines(std::pair<int, int> &currCell)
 			_cellsMap[tmp.first][tmp.second].getNumOfMines() == 0) {
 			Common::gotoXY(_left + tmp.first * CELL_LENGTH + 4, _top + tmp.second * CELL_HEIGHT + 1);
 			putchar(' ');
-		}
-		/*Common::gotoXY(_left + currCell.first * CELL_LENGTH, _top + currCell.second * CELL_HEIGHT);
-		putchar(188);
-		Common::gotoXY(_left + currCell.first * CELL_LENGTH, _top + currCell.second * CELL_HEIGHT + 2);
-		putchar(187);*/
-		if (tmp.second == 0) {
 			Common::gotoXY(_left + tmp.first * CELL_LENGTH + 4, _top + tmp.second * CELL_HEIGHT);
-			putchar(205);
+			if (tmp.second == 0)
+				putchar(205);
+			L = 1;
 		}
+		if (_cellsMap[tmp.first][tmp.second].getStatus() == 1) L = 1;
 	}
 
 	//Right cell
@@ -493,11 +490,12 @@ void Game::deleteMidLines(std::pair<int, int> &currCell)
 			_cellsMap[tmp.first][tmp.second].getNumOfMines() == 0) {
 			Common::gotoXY(_left + tmp.first * CELL_LENGTH, _top + tmp.second * CELL_HEIGHT + 1);
 			putchar(' ');
-		}
-		if (tmp.second == _size - 1) {
 			Common::gotoXY(_left + tmp.first * CELL_LENGTH, _top + tmp.second * CELL_HEIGHT + 2);
-			putchar(205);
+			if (tmp.second == _size - 1)
+				putchar(205);
+			R = 1;
 		}
+		if (_cellsMap[tmp.first][tmp.second].getStatus() == 1) R = 1;
 	}
 
 	//Top cell
@@ -507,11 +505,12 @@ void Game::deleteMidLines(std::pair<int, int> &currCell)
 			_cellsMap[tmp.first][tmp.second].getNumOfMines() == 0) {
 			Common::gotoXY(_left + tmp.first * CELL_LENGTH + 1, _top + tmp.second * CELL_HEIGHT + 2);
 			std::cout << "   ";
-		}
-		if (tmp.first == 0) {
 			Common::gotoXY(_left + tmp.first * CELL_LENGTH, _top + tmp.second * CELL_HEIGHT + 2);
-			putchar(186);
+			if (tmp.first == 0)
+				putchar(186);
+			T = 1;
 		}
+		if (_cellsMap[tmp.first][tmp.second].getStatus() == 1) T = 1;
 	}
 
 	//Bottom cell
@@ -521,14 +520,48 @@ void Game::deleteMidLines(std::pair<int, int> &currCell)
 			_cellsMap[tmp.first][tmp.second].getNumOfMines() == 0) {
 			Common::gotoXY(_left + tmp.first * CELL_LENGTH + 1, _top + tmp.second * CELL_HEIGHT);
 			std::cout << "   ";
-		}
-		if (tmp.first == _size - 1) {
 			Common::gotoXY(_left + tmp.first * CELL_LENGTH + 4, _top + tmp.second * CELL_HEIGHT);
-			putchar(186);
+			if (tmp.first == _size - 1)
+				putchar(186);
+			B = 1;
 		}
+		if (_cellsMap[tmp.first][tmp.second].getStatus() == 1) B = 1;
 	}
 
+	if (currCell.first == 0 || currCell.first == _size - 1 || currCell.second == 0 || currCell.second == _size - 1) return;
 
+	if (L) {
+		Common::gotoXY(_left + currCell.first * CELL_LENGTH, _top + currCell.second * CELL_HEIGHT);
+		if (T) putchar(188);
+		else putchar(185);
+
+		Common::gotoXY(_left + currCell.first * CELL_LENGTH, _top + currCell.second * CELL_HEIGHT + 2);
+		if (B) putchar(187);
+		else putchar(185);
+	}
+	else {
+		Common::gotoXY(_left + currCell.first * CELL_LENGTH, _top + currCell.second * CELL_HEIGHT);
+		putchar(185);
+		Common::gotoXY(_left + currCell.first * CELL_LENGTH, _top + currCell.second * CELL_HEIGHT + 2);
+		putchar(185);
+	}
+
+	if (R) {
+		Common::gotoXY(_left + currCell.first * CELL_LENGTH + 4, _top + currCell.second * CELL_HEIGHT);
+		if (T) putchar(200);
+		else putchar(202);
+
+		Common::gotoXY(_left + currCell.first * CELL_LENGTH + 4, _top + currCell.second * CELL_HEIGHT + 2);
+		if (B) putchar(201);
+		else putchar(202);
+	}
+	else {
+		Common::gotoXY(_left + currCell.first * CELL_LENGTH + 4, _top + currCell.second * CELL_HEIGHT);
+		putchar(204);
+		Common::gotoXY(_left + currCell.first * CELL_LENGTH + 4, _top + currCell.second * CELL_HEIGHT + 2);
+		putchar(204);
+	}
+	Sleep(1500);
 }
 
 //////////////////////////////////////////////////////
