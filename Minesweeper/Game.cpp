@@ -664,18 +664,18 @@ void Game::digNeighbor(std::pair<int, int> &currCell)
 
 void Game::placeFlag(std::pair<int,int> &currCell) 
 {
-	if (!_cellsMap[currCell.first][currCell.second].getStatus()) return;
+	if (!cell.getStatus()) return;
 
 	Common::gotoXY(currCell.first * CELL_LENGTH + 1 + _left, currCell.second * CELL_HEIGHT + 1 + _top);
-	if (_cellsMap[currCell.first][currCell.second].getFlag()) {
-		_cellsMap[currCell.first][currCell.second].setFlag(0);
+	if (cell.getFlag()) {
+		cell.setFlag(0);
 		_flagsPlaced--;
 		std::cout << " 0 ";
 		return;
 	}
 
 	Common::setConsoleColor(BLACK, LIGHT_PURPLE);
-	_cellsMap[currCell.first][currCell.second].setFlag(1);
+	cell.setFlag(1);
 	std::cout << " # ";
 	_flagsPlaced++;
 	selectCell(currCell);
