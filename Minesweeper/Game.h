@@ -18,6 +18,7 @@ private:
 	int _flagsPlaced = 0;			//Moi lan flag ++
 	int _cellsDigged = 0;			//Moi lan dig ++
 	Cells** _cellsMap;
+	bool** _diggedMap;
 
 public:
 
@@ -63,6 +64,7 @@ public:
 	void colorCell(std::pair <int, int>&);
 	void unselectCell(std::pair<int, int>&);
 	void deleteMidLines(std::pair<int, int>&);
+	void rotateJunctions();
 
 	//////////////////////////////////////////////////////
 
