@@ -64,11 +64,12 @@ public:
 	void colorCell(std::pair <int, int>&);
 	void unselectCell(std::pair<int, int>&);
 	void deleteMidLines(std::pair<int, int>&);
-	void rotateJunctions();
+	void rotateJunctions(std::pair<int, int>&);
 
 	//////////////////////////////////////////////////////
 
 	void countNumOfMines(std::pair<int, int>&);
+	void countNumOfMinesAll();
 	void digCell(std::pair<int, int>&);
 	void digNeighbor(std::pair<int, int>&);
 	void placeFlag(std::pair<int, int>&);

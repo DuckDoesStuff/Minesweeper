@@ -8,9 +8,9 @@ class Cells {
 private:
 
 	bool _hasMine = 0;
-	bool _status = 1;		//1: NORMAL, 0: DUG
+	bool _status = 1;		//1: NOT DIGGED, 0: DIGGED
 	bool _flag = 0;			//0: NOT FLAGGED, 1: FLAGGED
-	int _numOfMinesAround = 0;
+	int _numOfMinesAround = -2;
 
 public:
 
