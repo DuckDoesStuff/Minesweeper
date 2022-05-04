@@ -84,7 +84,7 @@ void Game::generateNumOfMines()
 	switch (_size)
 	{
 	case 10:
-		_numOfMines = 10;
+		_numOfMines = 3;
 		break;
 	case 15:
 		_numOfMines = 10;
@@ -104,7 +104,7 @@ void Game::generateMines()
 	}
 
 	int n = _numOfMines;
-	//srand(time(0));
+	srand(time(0));
 	while (n) {
 		int i = rand() % (_size * _size);
 		if (!_cellsMap[i % _size][i / _size].getMine()) {
@@ -473,7 +473,7 @@ void Game::unselectCell(std::pair<int, int> &currCell)
 void Game::deleteMidLines(std::pair<int, int> &currCell)
 {
 	std::pair<short, short> tmp;
-	Common::setConsoleColor(BLACK, YELLOW);
+	Common::setConsoleColor(BLACK, BRIGHT_WHITE);
 	int x,y;
 
 	//Left cell
@@ -536,7 +536,9 @@ void Game::deleteMidLines(std::pair<int, int> &currCell)
 
 void Game::rotateJunctions(std::pair<int, int> &currCell)
 {
-	if (currCell.first == 0 || currCell.first == _size - 1 || currCell.second == 0 || currCell.second == _size - 1) return;
+	if (currCell.first == 0 || currCell.first == _size - 1 || 
+		currCell.second == 0 || currCell.second == _size - 1) return;
+	if (cell.getNumOfMines() > 0) return;
 
 				//0 1 2
 				//3 X 4
@@ -563,11 +565,33 @@ void Game::rotateJunctions(std::pair<int, int> &currCell)
 				//0 1 2
 				//3 X 4
 				//5 6 7
-	Common::setConsoleColor(BLACK, RED);
+	Common::setConsoleColor(BLACK, BRIGHT_WHITE);
 	for (int i = 0; i < 4; i++) {
 		Common::gotoXY(_left + currCell.first * CELL_LENGTH + (i%2)*4, _top + currCell.second * CELL_HEIGHT + (i/2)*2);
 		if (checkDigged[i + (i % 2) + (i / 2) * 3] && checkDigged[1 + (i / 2) * 5] && checkDigged[3 + (i % 2)])
 			putchar(' ');
+		else if (checkDigged[i + (i % 2) + (i / 2) * 3] && checkDigged[3 + (i % 2)])
+			switch (i) {
+			case 0: putchar(200);
+				break;
+			case 1: putchar(188);
+				break;
+			case 2: putchar(201);
+				break;
+			case 3: putchar(187);
+				break;
+			}
+		else if (checkDigged[i + (i % 2) + (i / 2) * 3] && checkDigged[1 + (i / 2) * 5])
+			switch (i) {
+			case 0: putchar(187);
+				break;
+			case 1: putchar(201);
+				break;
+			case 2: putchar(188);
+				break;
+			case 3: putchar(200);
+				break;
+			}
 		else if(checkDigged[1 + (i / 2) * 5] && checkDigged[3 + (i % 2)])
 			switch (i) {
 			case 0: putchar(188);
@@ -601,8 +625,8 @@ void Game::rotateJunctions(std::pair<int, int> &currCell)
 			case 3: putchar(203);
 				break;
 			}
+		//Sleep(100);
 	}
-	//Sleep(3000);
 }
 
 //////////////////////////////////////////////////////
@@ -647,10 +671,10 @@ void Game::countNumOfMinesAll()
 
 void Game::digCell(std::pair<int, int> &currCell)
 {
-	
 	if (cell.getStatus() == 0) return;
 
 	cell.setStatus(0);
+	deleteMidLines(currCell);
 	_cellsDigged++;
 
 	if (cell.getNumOfMines() == 0)
