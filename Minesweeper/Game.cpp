@@ -59,15 +59,14 @@ void Game::playGame(int size)
 	}
 
 	//xu ly sau khi ket thuc 1 van game
-	// 
-	//if (win) winScreen();
-	//else if (lose)
-	//{
-	//	tryAgain();
-	//	/*c = Common::getConsoleInput();
-	//	if (c == 6) */playGame(size);
-	//}
-	playGame(size);
+	 
+	if (win) winScreen();
+	else if (lose)
+	{
+		tryAgain();
+		c = Common::getConsoleInput();
+		if (c == 6) playGame(size);
+	}
 }
 
 void Game::firstHit()
