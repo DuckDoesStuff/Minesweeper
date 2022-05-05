@@ -23,6 +23,7 @@ private:
 public:
 
 	int _left = 0, _top = 0, _size = 0;			//Position of board game and board size
+	std::pair<int, int> _firstCell = { 0, 0 };
 	Game();
 	~Game();
 
@@ -30,10 +31,8 @@ public:
 
 	void setupGame();
 	void playGame(int);
-	void firstHit(std::pair<int, int>&);
+	void firstHit();
 	void generateGameData();
-	void generateNumOfMines();
-	void generateMines();
 	void renderGameData();
 	void drawGame();
 	void winScreen();
