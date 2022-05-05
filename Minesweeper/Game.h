@@ -30,6 +30,7 @@ public:
 
 	void setupGame();
 	void playGame(int);
+	void firstHit(std::pair<int, int>&);
 	void generateGameData();
 	void generateNumOfMines();
 	void generateMines();
@@ -70,7 +71,7 @@ public:
 
 	void countNumOfMines(std::pair<int, int>&);
 	void countNumOfMinesAll();
-	void digCell(std::pair<int, int>&);
+	bool digCell(std::pair<int, int>&);
 	void digNeighbor(std::pair<int, int>&);
 	void placeFlag(std::pair<int, int>&);
 	bool endGameCheck();
