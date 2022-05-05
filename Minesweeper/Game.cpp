@@ -14,21 +14,15 @@ void Game::playGame(int size)
 {
 	_size = size;
 	Common::clearConsole();
-	drawGame();
 	setupGame();
 
-	generateGameData();
 	selectCell(_firstCell);
-
 	countNumOfMinesAll();
-	renderGameData();
 
 	firstHit();
 
 	std::pair<int, int> currCell = _firstCell;	//Initialize selecting cell
 	selectCell(currCell);
-
-	renderGameData();
 
 	int c = 0, count = 0;
 	bool win = false, lose = false;
@@ -150,6 +144,8 @@ void Game::firstHit()
 
 void Game::setupGame() {
 	Common::setConsoleColor(BLACK, BRIGHT_WHITE);
+	drawGame();
+	generateGameData();
 	_flagsPlaced = 0;
 	_cellsDigged = 0;
 	_firstCell = { 0, 0 };
@@ -659,7 +655,6 @@ void Game::rotateJunctions(std::pair<int, int> &currCell)
 				checkDigged[index] = 0;
 			}
 			index++;
-
 		}
 	}
 				//0 1 2
