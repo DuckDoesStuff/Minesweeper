@@ -487,7 +487,7 @@ void Game::colorCell(std::pair<int, int> &currCell)
 	Common::gotoXY(x, y);
 
 	if (cell.getFlag()) {
-		Common::setConsoleColor(BLACK, LIGHT_PURPLE);
+		Common::setConsoleColor(BLACK, LIGHT_YELLOW);
 		putchar(35);
 		return;
 	}
@@ -800,7 +800,7 @@ void Game::placeFlag(std::pair<int,int> &currCell)
 		return;
 	}
 
-	Common::setConsoleColor(BLACK, LIGHT_PURPLE);
+	Common::setConsoleColor(BLACK, LIGHT_YELLOW);
 	cell.setFlag(1);
 	std::cout << " # ";
 	_flagsPlaced++;
