@@ -22,8 +22,8 @@ private:
 
 public:
 
-	int _left = 0, _top = 0, _size = 0;			//Position of board game and board size
-	std::pair<int, int> _firstCell = { 0, 0 };
+	int _left = 0, _top = 0, _size = 0, _finish = 0;			//Position of board game and board size
+	std::pair<int, int> _currCell = { 0, 0 };
 	Game();
 	~Game();
 
@@ -35,6 +35,8 @@ public:
 	void generateGameData();
 	void renderGameData();
 	void drawGame();
+	void revealMines();
+	void endGame();
 	void winScreen();
 	void tryAgain();
 
@@ -70,8 +72,9 @@ public:
 
 	void countNumOfMines(std::pair<int, int>&);
 	void countNumOfMinesAll();
-	bool digCell(std::pair<int, int>&);
+	void digCell(std::pair<int, int>&);
 	void digNeighbor(std::pair<int, int>&);
 	void placeFlag(std::pair<int, int>&);
-	bool endGameCheck();
+	int endGameCheck(std::pair<int, int>&);
+	void autoFlagAndDig(std::pair<int, int>&);
 };

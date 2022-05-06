@@ -145,6 +145,8 @@ int Common::getConsoleInput()
 			return 7;
 		else if (c == 75 || c == 107) //K, k
 			return 8;
+		else if (c == 76 || c == 108) //K, k
+			return 9;
 		else
 			return 0;                 //nút khác
 	}
