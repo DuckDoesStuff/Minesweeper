@@ -75,6 +75,6 @@ public:
 	void digCell(std::pair<int, int>&);
 	void digNeighbor(std::pair<int, int>&);
 	void placeFlag(std::pair<int, int>&);
-	int endGameCheck(std::pair<int, int>&);
+	void endGameCheck(std::pair<int, int>&);
 	void autoFlagAndDig(std::pair<int, int>&);
 };
