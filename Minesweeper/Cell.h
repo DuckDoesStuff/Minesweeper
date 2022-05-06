@@ -4,12 +4,21 @@
 #include "Common.h"
 #include <string>
 
+#define NOT_DIGGED 1
+#define DIGGED 0
+
+#define HAS_MINE 1
+#define NOT_MINE 0
+
+#define FLAGGED 1
+#define NOT_FLAGGED 0
+
 class Cells {
 private:
 
-	bool _hasMine = 0;
-	bool _status = 1;		//1: NOT DIGGED, 0: DIGGED
-	bool _flag = 0;			//0: NOT FLAGGED, 1: FLAGGED
+	bool _hasMine = NOT_MINE;
+	bool _status = NOT_DIGGED;		//1: NOT DIGGED, 0: DIGGED
+	bool _flag = NOT_FLAGGED;		//0: NOT FLAGGED, 1: FLAGGED
 	int _numOfMinesAround = -2;
 
 public:
