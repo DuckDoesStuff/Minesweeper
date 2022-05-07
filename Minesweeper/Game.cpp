@@ -54,8 +54,10 @@ void Game::playGame(int size)
 			break;
 		default:break;
 		}
-		Common::gotoXY(0, 0);
 		Common::setConsoleColor(BLACK, BRIGHT_WHITE);
+		Common::gotoXY(0, 0);
+		std::cout << "                                                                                  ";
+		Common::gotoXY(0, 0);
 		std::cout << _flagsPlaced << "   " << _cellsDigged << "   " << _numOfMines << "   " << _finish;
 	}
 	//Sleep(1000);
@@ -172,7 +174,7 @@ void Game::generateGameData()
 	}
 
 	int n = _numOfMines;
-	srand(time(0));
+	//srand(time(0));
 	while (n) {
 		int i = rand() % (_size * _size);
 		if (!_cellsMap[i % _size][i / _size].getMine()) {
@@ -744,17 +746,16 @@ void Game::countNumOfMinesAll()
 void Game::digCell(std::pair<int, int> &currCell)
 {
 	if (cell.getFlag() == FLAGGED) return;
-	//if (cell.getMine()) return 1;
 	if (cell.getStatus() == DIGGED) return;
 
 	cell.setStatus(DIGGED);
 	_cellsDigged++;
+
 	if (cell.getNumOfMines() == 0) {
 		deleteMidLines(currCell);
+		rotateJunctions(currCell);
 		digNeighbor(currCell);
 	}
-	rotateJunctions(currCell);
-	deleteMidLines(currCell);
 
 	selectCell(currCell);
 	endGameCheck(currCell);
@@ -779,8 +780,16 @@ void Game::digNeighbor(std::pair<int, int> &currCell)
 		for (short j = start.first; j <= end.first; j++) {
 			std::pair <int, int> temp = { j, i };
 			
-			if (_cellsMap[temp.first][temp.second].getStatus() == DIGGED ||
-				_cellsMap[temp.first][temp.second].getFlag() == FLAGGED) continue;
+			if (_cellsMap[temp.first][temp.second].getStatus() == DIGGED) {
+				if (_cellsMap[temp.first][temp.second].getNumOfMines() == 0) {
+				deleteMidLines(temp);
+				}
+				continue;
+			}
+			if (_cellsMap[temp.first][temp.second].getFlag() == FLAGGED) continue;
+
+			/*if (_cellsMap[temp.first][temp.second].getStatus() == DIGGED ||
+				_cellsMap[temp.first][temp.second].getFlag() == FLAGGED) continue;*/
 
 			_cellsMap[temp.first][temp.second].setStatus(DIGGED);
 			_cellsDigged++;
