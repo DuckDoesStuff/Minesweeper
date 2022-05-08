@@ -13,16 +13,20 @@ Game::~Game() {
 void Game::playGame(int size)
 {
 	_size = size;
+	Common::clearConsole();
 	setupGame();
-	std::pair<int, int> currCell = { 0, 0 };		//Initialize selected cell 
+
+	selectCell(_currCell);
+	countNumOfMinesAll();
+
+	firstHit();
+
+	std::pair<int, int> currCell = _currCell;	//Initialize selecting cell
 	selectCell(currCell);
 
-	int c = 0;
-	int count = 0;
-	bool win = false;
-	bool lose = false;
+	int c = 0, count = 0;
 
-	while (!win && !lose) {
+	while (_finish == 0) {
 		c = Common::getConsoleInput();
 		switch (c) {
 		case 2:							//Up
@@ -40,70 +44,137 @@ void Game::playGame(int size)
 		case 6:							//Enter
 			break;
 		case 7:							//J, j(dig)
-			if (_cellsMap[currCell.first][currCell.second].getFlag()) break;
-			if (_cellsMap[currCell.first][currCell.second].getMine()) lose = true;	//Lost when steps on mine
 			digCell(currCell);
-			//deleteMidLines();
 			break;
 		case 8:							//K, k(flag)
 			placeFlag(currCell);
 			break;
+		case 9:							//L, l(auto flag or dig
+			autoFlagAndDig(currCell);
+			break;
 		default:break;
 		}
-		win = endGameCheck();
+		Common::setConsoleColor(BLACK, BRIGHT_WHITE);
+		Common::gotoXY(0, 0);
+		std::cout << "                                                                                  ";
+		Common::gotoXY(0, 0);
+		std::cout << _flagsPlaced << "   " << _cellsDigged << "   " << _numOfMines << "   " << _finish;
 	}
+	//Sleep(1000);
+	_currCell = currCell;
 
 	//xu ly sau khi ket thuc 1 van game
-	if (win) winScreen();
-	else if (lose)
-	{
-		tryAgain();
+	 
+	endGame();
+}
+
+void Game::firstHit()
+{
+	int c;
+	bool dug = false;
+	while (!dug) {
 		c = Common::getConsoleInput();
-		if (c == 6) playGame(size);
+		switch (c) {
+		case 2:							//Up
+			moveUp(_currCell);
+			break;
+		case 3:							//Left
+			moveLeft(_currCell);
+			break;
+		case 4:							//Right
+			moveRight(_currCell);
+			break;
+		case 5:							//Down
+			moveDown(_currCell);
+			break;
+		case 6:							//Enter
+			break;
+		case 7:							//J, j(dig)
+			dug = true;
+			break;
+		case 8:							//K, k(flag)
+			placeFlag(_currCell);
+			break;
+		case 9:							//L, l(auto flag and dig)
+		default:break;
+		}
 	}
+
+	std::pair<short, short> start, end;
+
+	start.first = _currCell.first - 1;
+	start.second = _currCell.second - 1;
+	end.first = _currCell.first + 1;
+	end.second = _currCell.second + 1;
+
+	if (_currCell.first == 0) start.first++;
+	else if (_currCell.first == _size - 1) end.first--;
+
+	if (_currCell.second == 0) start.second++;
+	else if (_currCell.second == _size - 1) end.second--;
+
+	short count = 0;
+	for (short i = start.second; i <= end.second; i++) {
+		for (short j = start.first; j <= end.first; j++) {
+			if (_cellsMap[j][i].getMine() == 1) {
+				count++;
+				_cellsMap[j][i].setMine(0);
+			}
+		}
+	}
+	if (count == 0) {
+		digCell(_currCell);
+		return;
+	}
+	srand(time(0));
+	while (count) {
+		int i = rand() % (_size * _size);
+		if (!(i % _size >= start.first && 
+			i % _size <= end.first && 
+			i / _size >= start.second && 
+			i / _size <= end.second) &&
+			!_cellsMap[i % _size][i / _size].getMine()) {
+			_cellsMap[i % _size][i / _size].setMine(1);
+			count--;
+		}
+	}
+	countNumOfMinesAll();
+	digCell(_currCell);
 }
 
 void Game::setupGame() {
 	Common::setConsoleColor(BLACK, BRIGHT_WHITE);
-	Common::clearConsole();
-	generateGameData();
 	drawGame();
-	//renderGameData(); 
+	generateGameData();
+	_flagsPlaced = 0;
+	_cellsDigged = 0;
+	_currCell = { 0, 0 };
+	_finish = 0;
 }
 
 void Game::generateGameData()
 {
-	generateNumOfMines();
-	generateMines();
-	_flagsPlaced = 0;
-	_cellsDigged = 0;
-}
-
-void Game::generateNumOfMines()
-{
 	switch (_size)
 	{
 	case 10:
-		_numOfMines = 5;
+		_numOfMines = 10;
 		break;
 	case 15:
-		_numOfMines = 10;
+		_numOfMines = 40;
 		break;
 	case 25:
 		_numOfMines = 100;
 	default:
 		break;
 	}
-}
 
-void Game::generateMines()
-{
 	_cellsMap = new Cells * [_size];
-	for (int i = 0; i < _size; i++)
+	for (int i = 0; i < _size; i++) {
 		_cellsMap[i] = new Cells[_size];
+	}
 
 	int n = _numOfMines;
-	srand(time(0));
+	//srand(time(0));
 	while (n) {
 		int i = rand() % (_size * _size);
 		if (!_cellsMap[i % _size][i / _size].getMine()) {
@@ -115,11 +186,12 @@ void Game::generateMines()
 
 void Game::renderGameData()
 {
+	Common::setConsoleColor(BLACK, BRIGHT_WHITE);
 	int left = 2, top = 1;
 	for (int i = 0; i < _size * CELL_HEIGHT; i += CELL_HEIGHT) {
 		for (int j = 0; j < _size * CELL_LENGTH; j += CELL_LENGTH) {
 			Common::gotoXY(left + j, top + i);
-			std::cout << _cellsMap[j / CELL_LENGTH][i / CELL_HEIGHT].getMine();
+			std::cout << _cellsMap[j / CELL_LENGTH][i / CELL_HEIGHT].getNumOfMines();
 		}
 	}
 }
@@ -141,7 +213,11 @@ void Game::drawGame() {//vẽ ra bảng game
 	drawLeaderBoard();
 }
 
-
+void Game::revealMines()
+{
+	//reveal _currCell
+	//reveal other cells around _currCell in random color
+}
 
 void Game::winScreen()
 {
@@ -180,6 +256,15 @@ void Game::tryAgain()
 	}
 
 	in.close();
+}
+
+void Game::endGame()
+{
+	if (_finish == 1) winScreen();
+	else if(_finish == 2) {
+		tryAgain();
+		if (Common::getConsoleInput() == 6) playGame(_size);
+	}
 }
 
 //////////////////////////////////////////////////////
@@ -304,7 +389,6 @@ void Game::drawLeaderBoard()
 		putchar(205);
 	}
 	
-
 	for (int i = 1; i <= LDBOARD_HEIGHT; i++) {
 		Common::gotoXY(x, y + i);
 		putchar(186);
@@ -383,22 +467,19 @@ void Game::selectCell(std::pair<int, int> &currCell)
 	Common::setConsoleColor(RED, BRIGHT_WHITE);
 	Common::gotoXY(x + 1, y);
 	std::cout << "   ";
-	if (_cellsMap[currCell.first][currCell.second].getFlag()) {		//show flag
+	if (cell.getFlag()) {		//show flag
 		Common::gotoXY(x + 2, y);
 		putchar(35);
 		return;
 	}
-	if (_cellsMap[currCell.first][currCell.second].getStatus()) {	//show undug cell
+	if (cell.getStatus()) {	//show undug cell
 		Common::setConsoleColor(RED, GRAY);	
 		Common::gotoXY(x + 2, y);
 		putchar('0');
 		return;
 	}
-
-	if (_cellsMap[currCell.first][currCell.second].getNumOfMines() != 0) {
-		Common::gotoXY(x + 2, y);
-		std::cout << _cellsMap[currCell.first][currCell.second].getNumOfMines();
-	}
+	Common::gotoXY(x + 2, y);
+	if (cell.getNumOfMines() > 0) std::cout << cell.getNumOfMines();
 
 }
 
@@ -408,13 +489,13 @@ void Game::colorCell(std::pair<int, int> &currCell)
 	int y = _top + currCell.second * CELL_HEIGHT + 1;
 	Common::gotoXY(x, y);
 
-	if (_cellsMap[currCell.first][currCell.second].getFlag()) {
-		Common::setConsoleColor(BLACK, LIGHT_PURPLE);
+	if (cell.getFlag()) {
+		Common::setConsoleColor(BLACK, LIGHT_YELLOW);
 		putchar(35);
 		return;
 	}
 
-	if (_cellsMap[currCell.first][currCell.second].getStatus()) {
+	if (cell.getStatus()) {
 		Common::setConsoleColor(BLACK, GRAY);
 		putchar('0');
 		return;
@@ -426,32 +507,32 @@ void Game::colorCell(std::pair<int, int> &currCell)
 
 	Common::gotoXY(x, y);
 
-	int num = _cellsMap[currCell.first][currCell.second].getNumOfMines();
-	if (!num) return;
+	int num = cell.getNumOfMines();
+	if (num <= 0) return;
 
 	switch (num) {
 	case 1:
-		Common::setConsoleColor(BLACK, BLUE);
-		std::cout << _cellsMap[currCell.first][currCell.second].getNumOfMines();
+		Common::setConsoleColor(BLACK, LIGHT_BLUE);
+		std::cout << cell.getNumOfMines();
 		break;
 	case 2:
-		Common::setConsoleColor(BLACK, GREEN);
-		std::cout << _cellsMap[currCell.first][currCell.second].getNumOfMines();
+		Common::setConsoleColor(BLACK, LIGHT_GREEN);
+		std::cout << cell.getNumOfMines();
 		break;
 	case 3:
-		Common::setConsoleColor(BLACK, RED);
-		std::cout << _cellsMap[currCell.first][currCell.second].getNumOfMines();
+		Common::setConsoleColor(BLACK, LIGHT_RED);
+		std::cout << cell.getNumOfMines();
 		break;
 	case 4:
 		Common::setConsoleColor(BLACK, PURPLE);
-		std::cout << _cellsMap[currCell.first][currCell.second].getNumOfMines();
+		std::cout << cell.getNumOfMines();
 		break;
 	case 5:
 	case 6:
 	case 7:
 	case 8:
 		Common::setConsoleColor(BLACK, LIGHT_AQUA);
-		std::cout << _cellsMap[currCell.first][currCell.second].getNumOfMines();
+		std::cout << cell.getNumOfMines();
 		break;
 	}
 	return;
@@ -467,7 +548,6 @@ void Game::unselectCell(std::pair<int, int> &currCell)
 		putchar(' ');
 	}
 	colorCell(currCell);
-
 }
 
 void Game::deleteMidLines(std::pair<int, int> &currCell)
@@ -475,23 +555,20 @@ void Game::deleteMidLines(std::pair<int, int> &currCell)
 	std::pair<short, short> tmp;
 	Common::setConsoleColor(BLACK, BRIGHT_WHITE);
 	int x,y;
-	bool L = 0, R = 0, T = 0, B = 0;
 
 	//Left cell
 	if (currCell.first != 0) {
 		tmp = { currCell.first - 1, currCell.second };
 		x = _left + tmp.first * CELL_LENGTH + 4;
 		y = _top + tmp.second * CELL_HEIGHT;
-		if (_cellsMap[tmp.first][tmp.second].getStatus() == 0 &&
-			_cellsMap[tmp.first][tmp.second].getNumOfMines() == 0) {
+		if (_cellsMap[tmp.first][tmp.second].getNumOfMines() == 0 &&
+			_cellsMap[tmp.first][tmp.second].getFlag() == NOT_FLAGGED) {
 			Common::gotoXY(x, y + 1);
 			putchar(' ');
 			Common::gotoXY(x, y);
 			if (tmp.second == 0)
 				putchar(205);
-			L = 1;
 		}
-		if (_cellsMap[tmp.first][tmp.second].getStatus() == 1) L = 1;
 	}
 
 	//Right cell
@@ -499,16 +576,14 @@ void Game::deleteMidLines(std::pair<int, int> &currCell)
 		tmp = { currCell.first + 1, currCell.second };
 		x = _left + tmp.first * CELL_LENGTH;
 		y = _top + tmp.second * CELL_HEIGHT;
-		if (_cellsMap[tmp.first][tmp.second].getStatus() == 0 &&
-			_cellsMap[tmp.first][tmp.second].getNumOfMines() == 0) {
+		if (_cellsMap[tmp.first][tmp.second].getNumOfMines() == 0 &&
+			_cellsMap[tmp.first][tmp.second].getFlag() == NOT_FLAGGED) {
 			Common::gotoXY(x, y + 1);
 			putchar(' ');
 			Common::gotoXY(x, y + 2);
 			if (tmp.second == _size - 1)
 				putchar(205);
-			R = 1;
 		}
-		if (_cellsMap[tmp.first][tmp.second].getStatus() == 1) R = 1;
 	}
 
 	//Top cell
@@ -516,16 +591,14 @@ void Game::deleteMidLines(std::pair<int, int> &currCell)
 		tmp = { currCell.first, currCell.second - 1 };
 		x = _left + tmp.first * CELL_LENGTH;
 		y = _top + tmp.second * CELL_HEIGHT + 2;
-		if (_cellsMap[tmp.first][tmp.second].getStatus() == 0 &&
-			_cellsMap[tmp.first][tmp.second].getNumOfMines() == 0) {
+		if (_cellsMap[tmp.first][tmp.second].getNumOfMines() == 0 &&
+			_cellsMap[tmp.first][tmp.second].getFlag() == NOT_FLAGGED) {
 			Common::gotoXY(x + 1,y);
 			std::cout << "   ";
 			Common::gotoXY(x ,y);
 			if (tmp.first == 0)
 				putchar(186);
-			T = 1;
 		}
-		if (_cellsMap[tmp.first][tmp.second].getStatus() == 1) T = 1;
 	}
 
 	//Bottom cell
@@ -533,61 +606,111 @@ void Game::deleteMidLines(std::pair<int, int> &currCell)
 		tmp = { currCell.first, currCell.second + 1 };
 		x = _left + tmp.first * CELL_LENGTH;
 		y = _top + tmp.second * CELL_HEIGHT;
-		if (_cellsMap[tmp.first][tmp.second].getStatus() == 0 &&
-			_cellsMap[tmp.first][tmp.second].getNumOfMines() == 0) {
+		if (_cellsMap[tmp.first][tmp.second].getNumOfMines() == 0 &&
+			_cellsMap[tmp.first][tmp.second].getFlag() == NOT_FLAGGED) {
 			Common::gotoXY(x + 1, y);
 			std::cout << "   ";
 			Common::gotoXY(x + 4, y);
 			if (tmp.first == _size - 1)
 				putchar(186);
-			B = 1;
 		}
-		if (_cellsMap[tmp.first][tmp.second].getStatus() == 1) B = 1;
 	}
-	
-	if (currCell.first == 0 || currCell.first == _size - 1 || currCell.second == 0 || currCell.second == _size - 1) return;
+}
 
-	x = _left + currCell.first * CELL_LENGTH;
-	y = _top + currCell.second * CELL_HEIGHT;
+void Game::rotateJunctions(std::pair<int, int> &currCell)
+{
+	if (cell.getNumOfMines() > 0) return;
+				//0 1 2
+				//3 X 4
+				//5 6 7
+	bool checkBorder[4] = { false };
+	short checkDigged[8] = { -1, -1, -1, -1, -1, -1, -1, -1 };
+	std::pair<short, short> start, end;
 
-	if (L) {
-		Common::gotoXY(x, y);
-		if (T) putchar(188);
-		else putchar(185);
+	start.first = currCell.first - 1;
+	start.second = currCell.second - 1;
+	end.first = currCell.first + 1;
+	end.second = currCell.second + 1;
 
-		Common::gotoXY(x, y + 2);
-		if (B) putchar(187);
-		else putchar(185);
+	if (currCell.first == 0) {
+		checkBorder[1] = true;
+		checkDigged[0] = 0;
+		checkDigged[3] = 0;
+		checkDigged[5] = 0;
+		start.first++;
 	}
-	else {
-		Common::gotoXY(x, y);
-		putchar(185);
-		Common::gotoXY(x, y + 2);
-		putchar(185);
+	else if (currCell.first == _size - 1) {
+		checkBorder[2] = true;
+		checkDigged[2] = 0;
+		checkDigged[4] = 0;
+		checkDigged[7] = 0;
+		end.first--;
 	}
 
-	if (R) {
-		Common::gotoXY(x + 4, y);
-		if (T) putchar(200);
-		else putchar(202);
+	if (currCell.second == 0) {
+		checkBorder[0] = true;
+		checkDigged[0] = 0;
+		checkDigged[1] = 0;
+		checkDigged[2] = 0;
+		start.second++;
+	}
+	else if (currCell.second == _size - 1) {
+		checkBorder[3] = true;
+		checkDigged[5] = 0;
+		checkDigged[6] = 0;
+		checkDigged[7] = 0;
+		end.second--;
+	}
 
-		Common::gotoXY(x + 4, y + 2);
-		if (B) putchar(201);
-		else putchar(202);
+	int index = 0;
+	for (short i = start.second; i <= end.second; i++) {
+		for (short j = start.first; j <= end.first; j++) {
+			if (currCell.first == j && currCell.second == i) continue;
+			if (_cellsMap[j][i].getNumOfMines() == 0 &&
+				_cellsMap[j][i].getFlag() == NOT_FLAGGED) {
+				while (checkDigged[index] == 0) index++;
+				checkDigged[index] = 1;
+			}
+			else {
+				while (checkDigged[index] == 0) index++;
+				checkDigged[index] = 0;
+			}
+			index++;
+		}
 	}
-	else {
-		Common::gotoXY(x + 4, y);
-		putchar(204);
-		Common::gotoXY(x + 4, y + 2);
-		putchar(204);
+				//0 1 2
+				//3 X 4
+				//5 6 7
+	for (int i = 0; i < 4; i++) {
+	Common::setConsoleColor(BLACK, BRIGHT_WHITE);
+		if (checkBorder[i / 2 + i / 3] || checkBorder[1 + i - i / 3]) continue;//might need to work on this later
+		Common::gotoXY(_left + currCell.first * CELL_LENGTH + (i%2)*4, _top + currCell.second * CELL_HEIGHT + (i/2)*2);
+		if (checkDigged[i + (i % 2) + (i / 2) * 3] &&	//corner
+			checkDigged[1 + (i / 2) * 5] &&				//vertical
+			checkDigged[3 + (i % 2)])					//horizontal
+			putchar(' ');
+		else if (checkDigged[i + (i % 2) + (i / 2) * 3] && checkDigged[3 + (i % 2)])
+			putchar(200 + (i / 2) - (i % 2) * 12 - (i / 3) * 2);
+		else if (checkDigged[i + (i % 2) + (i / 2) * 3] && checkDigged[1 + (i / 2) * 5])
+			putchar(187 + (i % 2) * 14 + i / 2 - i / 3);
+		else if (checkDigged[1 + (i / 2) * 5] && checkDigged[3 + (i % 2)])
+			putchar(188 + (i % 2) * 12 - i / 2 + (i / 3) * 2);
+		else if (checkDigged[1 + (i / 2) * 5])
+			putchar(185 + (i % 2) * 19);
+		else if (checkDigged[3 + (i % 2)])
+			putchar(202 + i / 2);
 	}
-	Sleep(1500);
+	return;
 }
 
 //////////////////////////////////////////////////////
 
 void Game::countNumOfMines(std::pair<int, int> &currCell)//count number of mines around a cell
 {
+	if (cell.getMine()) {
+		cell.setNumOfMines(-1);
+		return;
+	}
 	int count = 0;
 
 	std::pair<short, short> start, end;
@@ -609,22 +732,33 @@ void Game::countNumOfMines(std::pair<int, int> &currCell)//count number of mines
 		}
 	}
 
-	_cellsMap[currCell.first][currCell.second].setNumOfMines(count);
+	cell.setNumOfMines(count);
 }
 
-void Game::digCell(std::pair<int, int>& currCell)
+void Game::countNumOfMinesAll()
 {
-	
-	if (cell.getStatus() == 0) return;
+	for (int i = 0; i < _size * _size; i++) {
+		std::pair<int, int> currCell = { i % _size, i / _size };
+		countNumOfMines(currCell);
+	}
+}
 
-	countNumOfMines(currCell);
-	cell.setStatus(0);
+void Game::digCell(std::pair<int, int> &currCell)
+{
+	if (cell.getFlag() == FLAGGED) return;
+	if (cell.getStatus() == DIGGED) return;
+
+	cell.setStatus(DIGGED);
 	_cellsDigged++;
 
-	if (cell.getNumOfMines() == 0)
+	if (cell.getNumOfMines() == 0) {
+		deleteMidLines(currCell);
+		rotateJunctions(currCell);
 		digNeighbor(currCell);
-	  
+	}
+
 	selectCell(currCell);
+	endGameCheck(currCell);
 }
 
 void Game::digNeighbor(std::pair<int, int> &currCell) 
@@ -645,12 +779,21 @@ void Game::digNeighbor(std::pair<int, int> &currCell)
 	for (short i = start.second; i <= end.second; i++) {
 		for (short j = start.first; j <= end.first; j++) {
 			std::pair <int, int> temp = { j, i };
-			if (_cellsMap[temp.first][temp.second].getStatus() == 0 || //if cell has been dug or have mines then continue
-				_cellsMap[temp.first][temp.second].getMine() == 1) continue;
+			
+			if (_cellsMap[temp.first][temp.second].getStatus() == DIGGED) {
+				if (_cellsMap[temp.first][temp.second].getNumOfMines() == 0) {
+				deleteMidLines(temp);
+				}
+				continue;
+			}
+			if (_cellsMap[temp.first][temp.second].getFlag() == FLAGGED) continue;
 
-			countNumOfMines(temp);
-			_cellsMap[temp.first][temp.second].setStatus(0);
+			/*if (_cellsMap[temp.first][temp.second].getStatus() == DIGGED ||
+				_cellsMap[temp.first][temp.second].getFlag() == FLAGGED) continue;*/
+
+			_cellsMap[temp.first][temp.second].setStatus(DIGGED);
 			_cellsDigged++;
+			rotateJunctions(temp);
 			colorCell(temp);
 
 			if (_cellsMap[temp.first][temp.second].getNumOfMines() != 0)
@@ -664,24 +807,120 @@ void Game::digNeighbor(std::pair<int, int> &currCell)
 
 void Game::placeFlag(std::pair<int,int> &currCell) 
 {
-	if (!cell.getStatus()) return;
+	if (cell.getStatus() == DIGGED) return;
 
+	Common::setConsoleColor(RED, GRAY);
 	Common::gotoXY(currCell.first * CELL_LENGTH + 1 + _left, currCell.second * CELL_HEIGHT + 1 + _top);
-	if (cell.getFlag()) {
-		cell.setFlag(0);
+	if (cell.getFlag() == FLAGGED) {
+		cell.setFlag(NOT_FLAGGED);
 		_flagsPlaced--;
 		std::cout << " 0 ";
 		return;
 	}
 
-	Common::setConsoleColor(BLACK, LIGHT_PURPLE);
-	cell.setFlag(1);
+	Common::setConsoleColor(BLACK, LIGHT_YELLOW);
+	cell.setFlag(FLAGGED);
 	std::cout << " # ";
 	_flagsPlaced++;
 	selectCell(currCell);
 }
 
-bool Game::endGameCheck()
+void Game::autoFlagAndDig(std::pair<int, int> &currCell)
 {
-	return (_flagsPlaced == _numOfMines && _cellsDigged == _size * _size - _numOfMines);
+	if (cell.getNumOfMines() <= 0 || cell.getStatus() == FLAGGED) return;
+	std::pair<int, int> checkDigged[8] = { {-1, -1}, {-1, -1}, {-1, -1}, {-1, -1}, {-1, -1}, {-1, -1}, {-1, -1}, {-1, -1} };
+	std::pair<short, short> start, end;
+
+	start.first = currCell.first - 1;
+	start.second = currCell.second - 1;
+	end.first = currCell.first + 1;
+	end.second = currCell.second + 1;
+
+	int undugNum = 0, flagNum = 0;
+	int mineNum = cell.getNumOfMines();
+
+	if (currCell.first == 0) {
+		checkDigged[0] = { -2, -2 };
+		checkDigged[3] = { -2, -2 };
+		checkDigged[5] = { -2, -2 };
+		start.first++;
+	}
+	else if (currCell.first == _size - 1) {
+		checkDigged[2] = { -2, -2 };
+		checkDigged[4] = { -2, -2 };
+		checkDigged[7] = { -2, -2 };
+		end.first--;
+	}
+
+	if (currCell.second == 0) {
+		checkDigged[0] = { -2, -2 };
+		checkDigged[1] = { -2, -2 };
+		checkDigged[2] = { -2, -2 };
+		start.second++;
+	}
+	else if (currCell.second == _size - 1) {
+		checkDigged[5] = { -2, -2 };
+		checkDigged[6] = { -2, -2 };
+		checkDigged[7] = { -2, -2 };
+		end.second--;
+	}
+
+	int index = 0;
+	std::vector<int> idx;
+	std::pair<int, int> cellCheck = { -2, -2 };
+	for (short i = start.second; i <= end.second; i++) {
+		for (short j = start.first; j <= end.first; j++) {
+			if (j == currCell.first && i == currCell.second) continue;
+			if (_cellsMap[j][i].getFlag() == FLAGGED) {
+				flagNum++;
+			}
+			else if (_cellsMap[j][i].getStatus() == NOT_DIGGED) {
+				undugNum++;
+				while (checkDigged[index] == cellCheck) index++;
+				checkDigged[index] = { j, i };
+				idx.push_back(index);
+			}
+			index++;
+		}
+	}
+	
+	if (undugNum == 0) return;
+
+	//Common::gotoXY(0, 5);
+	//for (int i = 0; i < 8; i++) {
+	//	std::cout << checkDigged[i].first << " " << checkDigged[i].second << "     ";
+	//	//if (i % 2 == 0) std::cout << '\n';
+	//}
+	//std::cout << '\n' << mineNum << " " << flagNum << " " << undugNum;
+
+	if (flagNum == mineNum)
+		//dig all the other cells
+		while (undugNum) {
+			/*Common::gotoXY(0, 7);
+			std::cout << idx.back() << "D";*/
+			digCell(checkDigged[idx.back()]);
+			unselectCell(checkDigged[idx.back()]);
+			idx.pop_back();
+			undugNum--;
+			//Sleep(200);
+		}
+	else if (undugNum  + flagNum == mineNum)
+		//flag all undug cells
+		while (undugNum) {
+			/*Common::gotoXY(0, 7);
+			std::cout << idx.back() << "F";*/
+			placeFlag(checkDigged[idx.back()]);
+			unselectCell(checkDigged[idx.back()]);
+			idx.pop_back();
+			undugNum--;
+			//Sleep(200);
+		}
+	endGameCheck(currCell);
+}
+
+void Game::endGameCheck(std::pair<int, int> &currCell)
+{
+	if (_finish != 0) return;
+	if (_flagsPlaced == _numOfMines && _cellsDigged == _size * _size - _numOfMines) _finish = 1;	//mark as win
+	else if (cell.getMine() == HAS_MINE && cell.getStatus() == DIGGED) _finish = 2;//mark as lose
 }
