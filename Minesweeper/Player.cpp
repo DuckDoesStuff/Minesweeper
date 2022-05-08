@@ -1,4 +1,5 @@
 #include"Player.h"
+#include <iomanip>
 
 string Player::getName()
 {
@@ -55,13 +56,11 @@ void Player::writeFile()
 		//if (playerList[i].getTime.empty()) {
 			writeList << endl;
 			writeList << playerList[i].getName() << "/" << playerList[i].getMode() << "/";
-			writeList << playerList[i].getTime() << "/";
-			//writeList << fixed << setprecision(2) << (float)playerList[i]._time_played.count();
-			continue;
+			writeList << fixed << setprecision(2) << stoi(playerList[i].getTime());
+			//continue;
 		//}
-		writeList << endl;
+		/*writeList << endl;
 		writeList << playerList[i].getName() << "/" << playerList[i].getMode() << "/";
-		writeList << playerList[i].getTime() << "/";
-		//writeList << fixed << setprecision(2) << playerList[i]._display_time;
-	}
+		writeList << fixed << setprecision(2) << stoi(playerList[i].getTime());
+	}*/
 }
