@@ -47,5 +47,21 @@ void Player::writeFile()
 		}
 		else
 			break;
-	}	
+	}
+	
+	ofstream writeList("PlayerList.txt");	
+
+	for (int i = 0; i < playerList.size(); i++) {
+		//if (playerList[i].getTime.empty()) {
+			writeList << endl;
+			writeList << playerList[i].getName() << "/" << playerList[i].getMode() << "/";
+			writeList << playerList[i].getTime() << "/";
+			//writeList << fixed << setprecision(2) << (float)playerList[i]._time_played.count();
+			continue;
+		//}
+		writeList << endl;
+		writeList << playerList[i].getName() << "/" << playerList[i].getMode() << "/";
+		writeList << playerList[i].getTime() << "/";
+		//writeList << fixed << setprecision(2) << playerList[i]._display_time;
+	}
 }
