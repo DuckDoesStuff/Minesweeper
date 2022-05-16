@@ -13,8 +13,10 @@ Game::~Game() {
 void Game::playGame(int size)
 {
 	_size = size;
+	//_player->askPlayerName();
 	Common::clearConsole();
 	setupGame();
+	//danh dau moc thoi gian bat dau
 
 	selectCell(_currCell);
 	countNumOfMinesAll();
@@ -260,6 +262,11 @@ void Game::tryAgain()
 
 void Game::endGame()
 {
+	//danh dau moc thoi gian ket thuc
+	//hien diem va thoi gian cua nguoi choi
+	// _player->_time, _score
+	//hien leaderboard
+	//showLeaderboard()
 	if (_finish == 1) winScreen();
 	else if(_finish == 2) {
 		tryAgain();
