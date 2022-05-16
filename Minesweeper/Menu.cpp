@@ -2,7 +2,6 @@
 
 
 Menu::Menu() {
-
 }
 
 Menu::~Menu() {
@@ -146,6 +145,7 @@ void Menu::renderCurOpt()
 		}
 	}
 
+	Player* _player = new Player("taolao", "20", "9");
 	switch (slt) {
 	case 0://Play easy
 		Game().playGame(10);
@@ -153,8 +153,9 @@ void Menu::renderCurOpt()
 	case 1://Play hard
 		Game().playGame(15);
 		break;
-	case 3://Leaderboard
+	case 2://Leaderboard
+		_player->writeFile();//Testing
 		break;
-	case 4:exit(0);
+	case 3:exit(0);
 	}
 }

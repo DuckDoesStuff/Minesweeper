@@ -2,6 +2,7 @@
 
 #include "Common.h"
 #include "Cell.h"
+#include "Player.h"
 #include <iostream>
 
 #define cell _cellsMap[currCell.first][currCell.second]
@@ -19,6 +20,7 @@ private:
 	int _flagsPlaced = 0;			//Moi lan flag ++
 	int _cellsDigged = 0;			//Moi lan dig ++
 	Cells** _cellsMap;
+	Player* _player;
 
 public:
 

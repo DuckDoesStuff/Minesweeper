@@ -2,6 +2,7 @@
 
 #include "Common.h"
 #include "Game.h"
+#include "Player.h"
 #include <fstream>
 #include <string>
 #include <iostream>
@@ -10,6 +11,7 @@ class Menu {
 private:
 	const int _opt = 4;			//number of options
 	const std::string _selections[4] = {"Easy", "Hard", "Leaderboard", "Exit"}; //selections
+
 public:
 	Menu();
 	~Menu();
