@@ -703,6 +703,10 @@ void Game::rotateJunctions(std::pair<int, int> &currCell)
 	return;
 }
 
+void Game::showLeaderBoard()
+{
+}
+
 //////////////////////////////////////////////////////
 
 void Game::countNumOfMines(std::pair<int, int> &currCell)//count number of mines around a cell

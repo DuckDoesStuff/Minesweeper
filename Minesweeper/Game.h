@@ -67,6 +67,7 @@ public:
 	void unselectCell(std::pair<int, int>&);
 	void deleteMidLines(std::pair<int, int>&);
 	void rotateJunctions(std::pair<int, int>&);
+	void showLeaderBoard();
 
 	//////////////////////////////////////////////////////
 
