@@ -54,13 +54,14 @@ void Player::writeFile()
 
 	for (int i = 0; i < playerList.size(); i++) {
 		//if (playerList[i].getTime.empty()) {
-			writeList << endl;
-			writeList << playerList[i].getName() << "/" << playerList[i].getMode() << "/";
-			writeList << fixed << setprecision(2) << stoi(playerList[i].getTime());
-			//continue;
-		//}
-		/*writeList << endl;
+		writeList << endl;
 		writeList << playerList[i].getName() << "/" << playerList[i].getMode() << "/";
 		writeList << fixed << setprecision(2) << stoi(playerList[i].getTime());
-	}*/
+		//continue;
+	//}
+	/*writeList << endl;
+	writeList << playerList[i].getName() << "/" << playerList[i].getMode() << "/";
+	writeList << fixed << setprecision(2) << stoi(playerList[i].getTime());
+*/
+	}
 }
