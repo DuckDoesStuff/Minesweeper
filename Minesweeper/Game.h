@@ -3,6 +3,7 @@
 #include "Common.h"
 #include "Cell.h"
 #include <iostream>
+#include <vector>
 
 #define cell _cellsMap[currCell.first][currCell.second]
 const int CELL_HEIGHT = 2;
@@ -18,6 +19,7 @@ private:
 	int _numOfMines = 0;
 	int _flagsPlaced = 0;			//Moi lan flag ++
 	int _cellsDigged = 0;			//Moi lan dig ++
+	std::vector<std::vector<int>> minesCoords;
 	Cells** _cellsMap;
 
 public:

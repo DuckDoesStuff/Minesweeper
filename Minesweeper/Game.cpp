@@ -116,16 +116,13 @@ void Game::firstHit()
 	short count = 0;
 	for (short i = start.second; i <= end.second; i++) {
 		for (short j = start.first; j <= end.first; j++) {
-			if (_cellsMap[j][i].getMine() == 1) {
+			if (_cellsMap[j][i].getMine() == HAS_MINE) {
 				count++;
-				_cellsMap[j][i].setMine(0);
+				_cellsMap[j][i].setMine(NOT_MINE);
 			}
 		}
 	}
-	if (count == 0) {
-		digCell(_currCell);
-		return;
-	}
+	
 	srand(time(0));
 	while (count) {
 		int i = rand() % (_size * _size);
@@ -133,11 +130,24 @@ void Game::firstHit()
 			i % _size <= end.first && 
 			i / _size >= start.second && 
 			i / _size <= end.second) &&
-			!_cellsMap[i % _size][i / _size].getMine()) {
-			_cellsMap[i % _size][i / _size].setMine(1);
+			_cellsMap[i % _size][i / _size].getMine() == NOT_MINE) {
+			_cellsMap[i % _size][i / _size].setMine(HAS_MINE);
 			count--;
 		}
 	}
+
+	for (int i = 0; i < _size; i++) {
+		for (int j = 0; j < _size; j++) {
+			if(_cellsMap[j][i].getMine() == HAS_MINE)
+				minesCoords.push_back({ j, i });
+		}
+	}
+
+	if (count == 0) {
+		digCell(_currCell);
+		return;
+	}
+
 	countNumOfMinesAll();
 	digCell(_currCell);
 }
@@ -177,8 +187,8 @@ void Game::generateGameData()
 	//srand(time(0));
 	while (n) {
 		int i = rand() % (_size * _size);
-		if (!_cellsMap[i % _size][i / _size].getMine()) {
-			_cellsMap[i % _size][i / _size].setMine(1);
+		if (_cellsMap[i % _size][i / _size].getMine() == NOT_MINE) {
+			_cellsMap[i % _size][i / _size].setMine(HAS_MINE);
 			n--;
 		}
 	}
@@ -217,6 +227,17 @@ void Game::revealMines()
 {
 	//reveal _currCell
 	//reveal other cells around _currCell in random color
+	unselectCell(_currCell);
+	int colors[5] = { RED, AQUA, GREEN, PURPLE, BLUE };
+
+	while (minesCoords.size()) {
+		int i = minesCoords.size() - 1;
+		Common::setConsoleColor(BLACK, colors[rand() % 5]);
+		Common::gotoXY(_left + minesCoords[i][0]*CELL_LENGTH + 2, _top + minesCoords[i][1]*CELL_HEIGHT + 1);
+		putchar('X');
+		minesCoords.pop_back();
+		Sleep(200);
+	}
 }
 
 void Game::winScreen()
@@ -260,6 +281,8 @@ void Game::tryAgain()
 
 void Game::endGame()
 {
+	revealMines();
+	Sleep(500);
 	if (_finish == 1) winScreen();
 	else if(_finish == 2) {
 		tryAgain();
