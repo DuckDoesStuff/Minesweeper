@@ -24,6 +24,13 @@ void Game::playGame(int size)
 	std::pair<int, int> currCell = _currCell;	//Initialize selecting cell
 	selectCell(currCell);
 
+	for (int i = 0; i < _size; i++) {
+		for (int j = 0; j < _size; j++) {
+			if (_cellsMap[j][i].getMine() == HAS_MINE)
+				minesCoords.push_back({ j, i });
+		}
+	}
+
 	int c = 0, count = 0;
 
 	while (_finish == 0) {
@@ -123,6 +130,11 @@ void Game::firstHit()
 		}
 	}
 	
+	if (count == 0) {
+		digCell(_currCell);
+		return;
+	}
+
 	srand(time(0));
 	while (count) {
 		int i = rand() % (_size * _size);
@@ -134,18 +146,6 @@ void Game::firstHit()
 			_cellsMap[i % _size][i / _size].setMine(HAS_MINE);
 			count--;
 		}
-	}
-
-	for (int i = 0; i < _size; i++) {
-		for (int j = 0; j < _size; j++) {
-			if(_cellsMap[j][i].getMine() == HAS_MINE)
-				minesCoords.push_back({ j, i });
-		}
-	}
-
-	if (count == 0) {
-		digCell(_currCell);
-		return;
 	}
 
 	countNumOfMinesAll();
@@ -167,7 +167,7 @@ void Game::generateGameData()
 	switch (_size)
 	{
 	case 10:
-		_numOfMines = 10;
+		_numOfMines = 16;
 		break;
 	case 15:
 		_numOfMines = 40;
@@ -184,7 +184,7 @@ void Game::generateGameData()
 	}
 
 	int n = _numOfMines;
-	//srand(time(0));
+	srand(time(0));
 	while (n) {
 		int i = rand() % (_size * _size);
 		if (_cellsMap[i % _size][i / _size].getMine() == NOT_MINE) {
@@ -228,11 +228,10 @@ void Game::revealMines()
 	//reveal _currCell
 	//reveal other cells around _currCell in random color
 	unselectCell(_currCell);
-	int colors[5] = { RED, AQUA, GREEN, PURPLE, BLUE };
 
 	while (minesCoords.size()) {
 		int i = minesCoords.size() - 1;
-		Common::setConsoleColor(BLACK, colors[rand() % 5]);
+		Common::setConsoleColor(BLACK, RED);
 		Common::gotoXY(_left + minesCoords[i][0]*CELL_LENGTH + 2, _top + minesCoords[i][1]*CELL_HEIGHT + 1);
 		putchar('X');
 		minesCoords.pop_back();
